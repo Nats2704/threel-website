@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+
+/* Token warna dari desain kanvas ThreeL */
+@theme {
+  --color-forest: #0b3b2e;
+  --color-brand: #0f6b4f;
+  --color-brand-bright: #12805c;
+  --color-mint: #eef6f1;
+  --color-mint-deep: #e3f1ea;
+  --color-mint-line: #cfe3d8;
+  --color-line: #dce7e1;
+  --color-surface: #f6f8f7;
+  --color-sage: #c9ddd3;
+  --color-sage-muted: #a7c4b5;
+  --color-gold: #f2c94c;
+  --color-gold-deep: #d4a72c;
+  --color-gold-soft: #f7e3a1;
+  --color-gold-ink: #8a6411;
+  --color-ink: #1e293b;
+  --color-muted: #475569;
+  --color-danger: #b42318;
+}
+
+@theme inline {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #fff;
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
