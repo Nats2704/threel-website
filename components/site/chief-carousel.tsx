@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { AnimatePresence, MotionConfig, motion } from 'motion/react';
+import { AnimatePresence, MotionConfig, motion, type PanInfo } from 'motion/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { cLevels } from '@/lib/content';
@@ -34,6 +34,12 @@ export function ChiefCarousel() {
   const go = (d: 1 | -1) => setState(([i]) => [(i + d + n) % n, d]);
   const chief = cLevels[active];
 
+  // Geser (swipe) ke kiri = berikutnya, ke kanan = sebelumnya. Jarak cukup jauh ATAU lemparan cepat.
+  const onSwipe = (_: unknown, { offset, velocity }: PanInfo) => {
+    if (offset.x < -60 || velocity.x < -400) go(1);
+    else if (offset.x > 60 || velocity.x > 400) go(-1);
+  };
+
   return (
     <MotionConfig reducedMotion="user">
       <div
@@ -56,7 +62,16 @@ export function ChiefCarousel() {
                 initial={false}
                 animate={STACK[offset] ?? HIDDEN}
                 transition={spring}
-                className="absolute inset-0 overflow-hidden rounded-[28px] bg-mint shadow-[0_28px_56px_-20px_rgba(11,59,46,0.4)]"
+                // Hanya kartu depan yang bisa ditarik; setelah dilepas ia meluncur ke posisi barunya di tumpukan.
+                drag={offset === 0 ? 'x' : false}
+                dragSnapToOrigin
+                dragElastic={0.7}
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={onSwipe}
+                className={cn(
+                  'absolute inset-0 overflow-hidden rounded-[28px] bg-mint shadow-[0_28px_56px_-20px_rgba(11,59,46,0.4)]',
+                  offset === 0 && 'cursor-grab touch-pan-y active:cursor-grabbing',
+                )}
               >
                 <ChiefPortrait chief={c} colors={palettes[i % palettes.length]} front={offset === 0} />
               </motion.div>
@@ -65,7 +80,8 @@ export function ChiefCarousel() {
         </div>
 
         <div className="flex flex-col gap-8">
-          <div aria-live="polite" className="min-h-[260px] sm:min-h-[230px]">
+          {/* Area teks juga bisa digeser di HP; pan-y menjaga scroll vertikal halaman tetap normal. */}
+          <motion.div onPanEnd={onSwipe} aria-live="polite" className="min-h-[240px] touch-pan-y sm:min-h-[230px]">
             <AnimatePresence mode="wait" initial={false} custom={dir}>
               <motion.div
                 key={chief.code}
@@ -99,9 +115,10 @@ export function ChiefCarousel() {
                 </blockquote>
               </motion.div>
             </AnimatePresence>
-          </div>
+          </motion.div>
 
-          <div className="inline-flex w-fit items-center rounded-full border border-line bg-white/80 p-1 shadow-[0_8px_24px_-12px_rgba(11,59,46,0.25)] backdrop-blur">
+          {/* Tombol hanya di desktop; di HP cukup digeser. */}
+          <div className="hidden w-fit items-center rounded-full lg:inline-flex border border-line bg-white/80 p-1 shadow-[0_8px_24px_-12px_rgba(11,59,46,0.25)] backdrop-blur">
             <NavButton label="Pimpinan sebelumnya" onClick={() => go(-1)} dir={-1} />
             <span className="h-5 w-px bg-line" aria-hidden />
             <NavButton label="Pimpinan berikutnya" onClick={() => go(1)} dir={1} />
