@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
-import { divisions } from '@/lib/content';
+import { divisionGroups, divisions } from '@/lib/content';
 import { cn } from '@/lib/cn';
 import type { RecruitmentStatus } from '@/lib/recruitment';
 import { countWords } from '@/lib/validation';
@@ -20,6 +20,8 @@ type AssociateValues = {
   medsos: string;
   divisi1: string;
   divisi2: string;
+  posisi: string;
+  bersediaStaf: boolean;
   cv: File | null;
   portofolio: string;
   kasus: string;
@@ -34,6 +36,8 @@ const initial: AssociateValues = {
   medsos: '',
   divisi1: '',
   divisi2: '',
+  posisi: '',
+  bersediaStaf: false,
   cv: null,
   portofolio: '',
   kasus: '',
@@ -42,13 +46,18 @@ const initial: AssociateValues = {
 
 const sections: Array<{ no: string; label: string; keys: Array<keyof AssociateValues> }> = [
   { no: '01', label: 'Data diri', keys: ['nama', 'email', 'wa', 'instansi', 'medsos'] },
-  { no: '02', label: 'Divisi', keys: ['divisi1', 'divisi2'] },
+  { no: '02', label: 'Divisi', keys: ['divisi1', 'divisi2', 'posisi'] },
   { no: '03', label: 'Dokumen', keys: ['cv', 'portofolio'] },
   { no: '04', label: 'Studi kasus', keys: ['kasus'] },
   { no: '05', label: 'Komitmen', keys: ['komitmen'] },
 ];
 
-const divisionOptions = divisions.map((d) => ({ value: d.value, label: `Divisi ${d.label}` }));
+const posisiOptions = [
+  { value: 'manager', title: 'Manager', sub: 'Memimpin tim dan program divisi' },
+  { value: 'staf', title: 'Staf', sub: 'Menjalankan tugas teknis divisi' },
+];
+
+const divisionOptions = divisions.map((d) => ({ value: d.value, label: d.label, group: divisionGroups[d.group] }));
 
 function SectionCard({ no, title, children }: { no: string; title: string; children: React.ReactNode }) {
   return (
@@ -79,6 +88,7 @@ export function AssociateForm({ status }: { status: RecruitmentStatus }) {
       differentFrom: 'divisi1',
       differentMsg: 'Pilihan cadangan harus berbeda dari pilihan utama.',
     },
+    posisi: { required: true, requiredMsg: 'Pilih posisi yang kamu lamar.' },
     cv: { file: { required: true, types: ['pdf'], maxMB: 5 } },
     portofolio: { required: true, url: true },
     kasus: waitlist ? {} : { required: true, minWords: 80 },
@@ -89,11 +99,11 @@ export function AssociateForm({ status }: { status: RecruitmentStatus }) {
   const main = divisions.find((d) => d.value === v.divisi1);
   const backup = divisions.find((d) => d.value === v.divisi2);
 
-  // Progres: bagian dianggap selesai bila sudah disentuh dan semua isiannya valid.
-  const progress = sections.map((s) => ({
-    ...s,
-    done: s.keys.some((k) => v[k] !== initial[k]) && s.keys.every((k) => !allErrors[k]),
-  }));
+  // Progres dihitung ulang setiap render, jadi langsung berubah saat isian diubah.
+  // Bagian selesai bila setiap isiannya sudah diisi dan valid (isian opsional pun harus terisi).
+  const isSectionDone = (keys: Array<keyof AssociateValues>) =>
+    keys.every((k) => v[k] !== initial[k] && !allErrors[k]);
+  const progress = sections.map((s) => ({ ...s, done: isSectionDone(s.keys) }));
   const pct = Math.round((progress.filter((s) => s.done).length / progress.length) * 100);
 
   return (
@@ -160,7 +170,7 @@ export function AssociateForm({ status }: { status: RecruitmentStatus }) {
                 {waitlist ? 'Kamu masuk daftar tunggu Associate' : 'Lamaran Associate diterima'}
               </h2>
               <p className="text-base leading-relaxed text-muted">
-                Terima kasih, {v.nama}. Pilihan utamamu: Divisi {main?.label}. Tim HR akan menghubungimu melalui {v.email}.
+                Terima kasih, {v.nama}. Pilihan utamamu: {main?.label}. Tim HR akan menghubungimu melalui {v.email}.
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
                 <Link href="/" className="flex h-12 items-center rounded-xl bg-brand px-6 font-bold text-white hover:bg-forest">
@@ -183,11 +193,50 @@ export function AssociateForm({ status }: { status: RecruitmentStatus }) {
                 </div>
               </SectionCard>
 
-              <SectionCard no="02" title="Pilihan divisi">
+              <SectionCard no="02" title="Pilihan divisi & posisi">
                 <div className="grid gap-5 sm:grid-cols-2">
                   <SelectField id="divisi1" label="Pilihan utama" required value={v.divisi1} onChange={(x) => set('divisi1', x)} error={err.divisi1} options={divisionOptions} placeholder="Pilih divisi" />
                   <SelectField id="divisi2" label="Pilihan cadangan" required value={v.divisi2} onChange={(x) => set('divisi2', x)} error={err.divisi2} options={divisionOptions} placeholder="Pilih divisi" />
                 </div>
+                <fieldset id="posisi" tabIndex={-1} className="flex flex-col gap-3 focus:outline-none">
+                  <legend className="mb-2 text-sm font-semibold text-ink">
+                    Posisi yang dilamar<span className="text-danger"> *</span>
+                  </legend>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {posisiOptions.map((o) => {
+                      const checked = v.posisi === o.value;
+                      return (
+                        <label
+                          key={o.value}
+                          className={cn(
+                            'relative flex cursor-pointer flex-col gap-1 rounded-xl border-[1.5px] px-5 py-4 transition focus-within:ring-4 focus-within:ring-brand/20',
+                            checked ? 'border-brand bg-mint' : err.posisi ? 'border-danger bg-white' : 'border-slate-300 bg-white hover:border-brand',
+                          )}
+                        >
+                          <input
+                            type="radio"
+                            name="posisi"
+                            value={o.value}
+                            checked={checked}
+                            onChange={() => {
+                              set('posisi', o.value);
+                              if (o.value === 'staf') set('bersediaStaf', false);
+                            }}
+                            className="absolute size-px opacity-0"
+                          />
+                          <span className="text-[15px] font-extrabold text-forest">{o.title}</span>
+                          <span className="text-[13px] text-muted">{o.sub}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                  {err.posisi ? <p className="text-[13px] text-danger">{err.posisi}</p> : null}
+                </fieldset>
+                {v.posisi === 'manager' ? (
+                  <ConsentCheckbox id="bersediaStaf" checked={v.bersediaStaf} onChange={(x) => set('bersediaStaf', x)}>
+                    Saya bersedia ditempatkan sebagai <strong>Staf</strong> apabila dinilai belum sesuai untuk posisi Manager.
+                  </ConsentCheckbox>
+                ) : null}
               </SectionCard>
 
               <SectionCard no="03" title="Dokumen & portofolio">
@@ -243,7 +292,7 @@ export function AssociateForm({ status }: { status: RecruitmentStatus }) {
                   disabled={form.submitting}
                   className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl bg-brand px-7 font-bold text-white transition hover:bg-forest disabled:opacity-60 sm:ml-auto"
                 >
-                  {waitlist ? 'Masuk daftar tunggu' : 'Kirim lamaran'}
+                  {waitlist ? 'Submit' : 'Kirim lamaran'}
                   <ArrowRight className="size-[18px]" aria-hidden />
                 </button>
               </div>
@@ -254,7 +303,7 @@ export function AssociateForm({ status }: { status: RecruitmentStatus }) {
             <span className="font-mono text-[11px] font-semibold tracking-[0.12em] text-gold">PROFIL KEAHLIANMU</span>
             <div className="flex flex-col gap-1">
               <span className="text-[13px] text-sage-muted">Pilihan utama</span>
-              <span className="text-lg font-extrabold">{main ? `Divisi ${main.label}` : 'Belum dipilih'}</span>
+              <span className="text-lg font-extrabold">{main?.label ?? 'Belum dipilih'}</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {(main?.skills ?? ['Pilih divisi untuk melihat keahlian']).map((s) => (
@@ -265,7 +314,14 @@ export function AssociateForm({ status }: { status: RecruitmentStatus }) {
             </div>
             <div className="flex flex-col gap-1 border-t border-white/15 pt-3.5">
               <span className="text-[13px] text-sage-muted">Pilihan cadangan</span>
-              <span className="text-[15px] font-bold">{backup ? `Divisi ${backup.label}` : 'Belum dipilih'}</span>
+              <span className="text-[15px] font-bold">{backup?.label ?? 'Belum dipilih'}</span>
+            </div>
+            <div className="flex flex-col gap-1 border-t border-white/15 pt-3.5">
+              <span className="text-[13px] text-sage-muted">Posisi</span>
+              <span className="text-[15px] font-bold">
+                {posisiOptions.find((o) => o.value === v.posisi)?.title ?? 'Belum dipilih'}
+                {v.posisi === 'manager' && v.bersediaStaf ? ' (bersedia Staf)' : ''}
+              </span>
             </div>
             <p className="rounded-xl bg-gold/12 px-4 py-3.5 text-[13px] leading-relaxed text-gold-soft">
               {main?.porto ?? 'Portofolio yang relevan dengan divisi pilihan mempercepat proses seleksi.'}

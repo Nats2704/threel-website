@@ -9,6 +9,7 @@ export const metadata: Metadata = { title: 'Daftar' };
 export default function DaftarPage() {
   const bod = recruitment.bod;
   const assoc = recruitment.associate;
+  const member = recruitment.member;
 
   return (
     <>
@@ -25,7 +26,7 @@ export default function DaftarPage() {
 
       <section aria-label="Pilihan peran" className="overflow-x-clip pb-16">
         <Container>
-          <RoleDeck bod={bod} associate={assoc} />
+          <RoleDeck bod={bod} associate={assoc} member={member} />
         </Container>
       </section>
 
@@ -69,7 +70,7 @@ export default function DaftarPage() {
                   </th>
                   <td className={cn('p-4 font-bold', statusMeta[bod].text)}>{statusMeta[bod].label}</td>
                   <td className={cn('p-4 font-bold', statusMeta[assoc].text)}>{statusMeta[assoc].label}</td>
-                  <td className="p-4 font-bold text-green-900">Rolling, sepanjang tahun</td>
+                  <td className={cn('p-4 font-bold', statusMeta[member].text)}>{statusMeta[member].label}</td>
                 </tr>
               </tbody>
             </table>

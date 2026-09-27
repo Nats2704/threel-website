@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
 import { cLevels } from '@/lib/content';
-import { statusMeta, type RecruitmentStatus } from '@/lib/recruitment';
+import type { RecruitmentStatus } from '@/lib/recruitment';
 import { countWords } from '@/lib/validation';
 import { useForm } from '@/hooks/use-form';
 import { Container } from '@/components/ui/section';
@@ -37,12 +37,7 @@ const initial: BodValues = {
   komitmen: false,
 };
 
-const steps = [
-  'Seleksi berkas dan esai',
-  'Wawancara dengan Founder dan CEO',
-  'Presentasi rencana strategis divisi',
-  'Pengumuman dan onboarding',
-];
+const steps = ['Seleksi Berkas', 'Focus Group Discussion', 'Wawancara', 'Mini Presentation', 'Onboarding'];
 
 function SectionCard({ no, title, desc, children }: { no: string; title: string; desc: string; children: React.ReactNode }) {
   return (
@@ -88,24 +83,18 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
         <Container className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex max-w-3xl flex-col gap-4">
             <BackToRoles className="text-sage hover:text-white" />
-            <span className="font-mono text-xs font-semibold tracking-[0.16em] text-gold">
-              BOARD OF DIRECTOR · C-LEVEL EXECUTIVE
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="font-mono text-xs font-semibold tracking-[0.16em] text-gold">
+                BOARD OF DIRECTOR · C-LEVEL EXECUTIVE
+              </span>
+              <StatusBadge status={status} />
+            </div>
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Pimpin arah strategis ThreeL.</h1>
             <p className="text-[17px] leading-relaxed text-sage">
               {waitlist
                 ? 'Batch rekrutmen BOD sedang ditutup. Isi formulir ini untuk masuk daftar tunggu; kami menghubungimu saat batch berikutnya dibuka.'
                 : 'Kami mencari pimpinan eksekutif yang siap memegang arah divisi, membangun tim, dan bertanggung jawab atas dampak program.'}
             </p>
-          </div>
-          <div className="flex w-full flex-col gap-3.5 rounded-md border border-white/20 p-6 lg:w-[340px]">
-            <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-sage-muted">STATUS REKRUTMEN</span>
-            <StatusBadge status={status} className="w-fit" />
-            <span className="text-sm leading-relaxed text-sage">{statusMeta[status].note}</span>
-            <div className="flex justify-between border-t border-white/15 pt-3 text-sm">
-              <span className="text-sage-muted">Komitmen</span>
-              <span className="font-bold">15–20 jam/minggu</span>
-            </div>
           </div>
         </Container>
       </section>
@@ -114,21 +103,20 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
         <aside className="flex flex-col gap-5 lg:sticky lg:top-28">
           <div className="flex flex-col gap-4 rounded-md border border-[#DCE3DF] bg-white p-7">
             <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-brand">TAHAPAN SELEKSI</span>
-            <ol className="flex flex-col gap-3.5 text-sm leading-relaxed">
+            {/* Penanda alur statis, bukan pelacak status. */}
+            <ol className="flex flex-col">
               {steps.map((s, i) => (
-                <li key={s} className="flex gap-3">
-                  <span className="font-mono font-semibold text-gold-ink">0{i + 1}</span>
-                  {s}
+                <li key={s} className="relative flex gap-4 pb-6 last:pb-0">
+                  {i < steps.length - 1 ? (
+                    <span className="absolute left-[15px] top-8 bottom-0 w-0.5 bg-mint-line" aria-hidden />
+                  ) : null}
+                  <span className="relative flex size-8 shrink-0 items-center justify-center rounded-full border-2 border-brand bg-mint font-mono text-[11px] font-semibold text-brand">
+                    0{i + 1}
+                  </span>
+                  <span className="pt-1 text-[15px] font-semibold text-forest">{s}</span>
                 </li>
               ))}
             </ol>
-          </div>
-          <div className="flex flex-col gap-3.5 rounded-md border border-[#DCE3DF] bg-white p-7 text-sm">
-            <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-brand">SIAPKAN SEBELUM MENGISI</span>
-            <span>CV terbaru (PDF, maks. 5 MB)</span>
-            <span>Profil LinkedIn aktif</span>
-            <span>Tautan portofolio kepemimpinan</span>
-            <span>Dua esai, masing-masing min. 100 kata</span>
           </div>
         </aside>
 
@@ -234,18 +222,14 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
               </ConsentCheckbox>
             </SectionCard>
 
-            <div className="flex flex-col gap-4 rounded-md bg-forest px-6 py-6 text-white sm:flex-row sm:items-center sm:justify-between sm:px-9">
-              {form.errorCount > 0 ? (
-                <ErrorSummary count={form.errorCount} className="text-rose-300" />
-              ) : (
-                <span className="text-sm text-sage">Data hanya digunakan untuk proses rekrutmen ThreeL.</span>
-              )}
+            <div className="flex flex-col-reverse gap-4 py-2 sm:flex-row sm:items-center sm:justify-between">
+              <ErrorSummary count={form.errorCount} />
               <button
                 type="submit"
                 disabled={form.submitting}
-                className="inline-flex h-[52px] shrink-0 items-center justify-center gap-2 rounded bg-gold px-7 font-extrabold text-forest transition hover:bg-gold-soft disabled:opacity-60"
+                className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded bg-forest px-6 font-bold text-white transition hover:bg-brand disabled:opacity-60 sm:ml-auto"
               >
-                {waitlist ? 'Masuk daftar tunggu' : 'Kirim lamaran'}
+                {waitlist ? 'Submit' : 'Kirim lamaran'}
                 <ArrowRight className="size-[18px]" aria-hidden />
               </button>
             </div>

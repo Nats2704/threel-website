@@ -2,14 +2,14 @@
  * Status rekrutmen: satu sumber kebenaran untuk halaman /daftar dan formulirnya.
  * 'open'     = Open Batch
  * 'waitlist' = Closed / Masuk Daftar Tunggu
- * Member (ThreeLearnian) selalu terbuka (rolling registration).
  * Nanti bisa diganti dengan nilai dari backend/CMS.
  */
 export type RecruitmentStatus = 'open' | 'waitlist';
 
-export const recruitment: Record<'bod' | 'associate', RecruitmentStatus> = {
+export const recruitment: Record<'bod' | 'associate' | 'member', RecruitmentStatus> = {
   bod: 'open',
   associate: 'waitlist',
+  member: 'waitlist',
 };
 
 export const statusMeta: Record<

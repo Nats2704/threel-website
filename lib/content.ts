@@ -190,14 +190,16 @@ export const lookLearnLead = [
   },
 ];
 
+/** `label` tampil di kartu misi, `text` muncul sebagai penjelasan saat kartu dipilih, `image` jadi latarnya. */
 export const missions = [
-  'Membuka akses pendidikan yang berkualitas bagi siswa dari keluarga prasejahtera.',
-  'Mengembangkan kepemimpinan dan keterampilan teknologi pemuda.',
-  'Menjalankan aksi sosial, kesehatan, dan lingkungan yang terukur serta berkelanjutan.',
-  'Membangun kolaborasi lintas sektor bersama korporasi, instansi, kampus, dan komunitas.',
+  { label: 'Pendidikan', text: 'Membuka akses pendidikan yang berkualitas bagi siswa dari keluarga prasejahtera.', image: '/images/misi/pendidikan.webp' },
+  { label: 'Kepemimpinan & Teknologi', text: 'Mengembangkan kepemimpinan dan keterampilan teknologi pemuda.', image: '/images/misi/kepemimpinan-teknologi.webp' },
+  { label: 'Aksi Sosial', text: 'Menjalankan aksi sosial, kesehatan, dan lingkungan yang terukur serta berkelanjutan.', image: '/images/misi/aksi-sosial.webp' },
+  { label: 'Kolaborasi', text: 'Membangun kolaborasi lintas sektor bersama korporasi, instansi, kampus, dan komunitas.', image: '/images/misi/kolaborasi.webp' },
 ];
 
-export const coreValues = [
+/** `photo` opsional: isi dengan path di /public/images (mis. '/images/nilai/solutioner.jpg'). */
+export const coreValues: Array<{ title: string; desc: string; photo?: string }> = [
   { title: 'Stay Connected to God', desc: 'Setiap langkah berangkat dari iman dan integritas.' },
   { title: 'Solutioner', desc: 'Fokus pada jalan keluar, bukan sekadar menyoroti masalah.' },
   { title: 'Caring & Happiness', desc: 'Peduli pada sesama dan menjaga kebahagiaan dalam berkarya.' },
@@ -206,23 +208,56 @@ export const coreValues = [
   { title: 'Synergy', desc: 'Menyatukan kekuatan agar dampak yang dihasilkan berlipat.' },
 ];
 
-export const cLevels = [
-  { code: 'CMO', title: 'Chief Marketing Officer', initial: 'M', value: 'cmo', scope: 'Memimpin strategi komunikasi, branding, dan media ThreeL.' },
-  { code: 'CHRO', title: 'Chief Human Resources Officer', initial: 'H', value: 'chro', scope: 'Memimpin rekrutmen, pengembangan anggota, dan budaya organisasi.' },
-  { code: 'CFO', title: 'Chief Finance Officer', initial: 'F', value: 'cfo', scope: 'Memimpin penganggaran, pelaporan keuangan, dan keberlanjutan dana, termasuk kelas berbayar ThreeL Mengajar.' },
-  { code: 'COO', title: 'Chief Operation Officer', initial: 'O', value: 'coo', scope: 'Memimpin eksekusi program dan operasional lapangan di tiga pilar.' },
-  { code: 'CIDO', title: 'Chief Innovation and Development Officer', initial: 'I', value: 'cido', scope: 'Memimpin inovasi program dan pengembangan inisiatif baru.' },
-  { code: 'CTO', title: 'Chief Technology Officer', initial: 'T', value: 'cto', scope: 'Memimpin pengembangan teknologi dan sistem digital organisasi.' },
+/**
+ * Pimpinan C-Level. `name`, `photo`, dan `quote` masih DRAF: ganti dengan nama asli,
+ * path foto di /public/images/tim (mis. '/images/tim/cmo.jpg'), dan kutipan dari orangnya langsung.
+ */
+export const cLevels: Array<{
+  code: string;
+  title: string;
+  initial: string;
+  value: string;
+  scope: string;
+  name: string;
+  photo?: string;
+  quote: string;
+}> = [
+  { code: 'CMO', title: 'Chief Marketing Officer', initial: 'M', value: 'cmo', scope: 'Memimpin strategi komunikasi, branding, dan media ThreeL.', name: '[Nama CMO]', quote: 'Cerita yang jujur dari lapangan adalah cara terbaik mengajak lebih banyak orang ikut bergerak.' },
+  { code: 'CHRO', title: 'Chief Human Resources Officer', initial: 'H', value: 'chro', scope: 'Memimpin rekrutmen, pengembangan anggota, dan budaya organisasi.', name: '[Nama CHRO]', quote: 'Organisasi ini hanya sekuat orang-orangnya. Tugas kami memastikan setiap anggota tumbuh selama di sini.' },
+  { code: 'CFO', title: 'Chief Finance Officer', initial: 'F', value: 'cfo', scope: 'Memimpin penganggaran, pelaporan keuangan, dan keberlanjutan dana, termasuk kelas berbayar ThreeL Mengajar.', name: '[Nama CFO]', quote: 'Setiap rupiah yang dipercayakan kepada kami harus bisa dipertanggungjawabkan dan berdampak.' },
+  { code: 'COO', title: 'Chief Operation Officer', initial: 'O', value: 'coo', scope: 'Memimpin eksekusi program dan operasional lapangan di tiga pilar.', name: '[Nama COO]', quote: 'Rencana yang baik baru berarti ketika dijalankan dengan rapi di lapangan, bersama relawan dan mitra.' },
+  { code: 'CIDO', title: 'Chief Innovation and Development Officer', initial: 'I', value: 'cido', scope: 'Memimpin inovasi program dan pengembangan inisiatif baru.', name: '[Nama CIDO]', quote: 'Kami terus mencari cara baru agar belajar terasa dekat dan relevan bagi setiap anak.' },
 ];
 
+/** Founder, ditampilkan terpisah di bawah jajaran C-Level. Data masih DRAF. */
+export const founder: { name: string; role: string; photo?: string; quote: string; highlight: string } = {
+  name: '[Nama Founder]',
+  role: 'Founder, ThreeL',
+  quote: 'ThreeL lahir dari keresahan, dan tumbuh karena anak muda yang memilih untuk bergerak.',
+  highlight: 'ThreeL',
+};
+
+/** Unit Manager Associate, dikelompokkan per C-Level yang membawahinya. */
 export const divisions = [
-  { value: 'ops', label: 'Operasional Program', skills: ['Manajemen acara', 'Logistik lapangan', 'Koordinasi relawan'], porto: 'Lampirkan laporan kegiatan atau rundown acara yang pernah kamu pegang.' },
-  { value: 'edu', label: 'Pendidikan', skills: ['Pengajaran', 'Penyusunan materi', 'Kurikulum bimbel'], porto: 'Lampirkan contoh materi ajar atau rekaman sesi mengajar.' },
-  { value: 'mkt', label: 'Marketing & Media', skills: ['Konten media sosial', 'Desain grafis', 'Copywriting'], porto: 'Behance atau folder Drive berisi desain dan konten terbaikmu.' },
-  { value: 'hr', label: 'HR & Keanggotaan', skills: ['Rekrutmen', 'Pengembangan anggota', 'Budaya organisasi'], porto: 'Lampirkan program kaderisasi atau acara internal yang pernah kamu rancang.' },
-  { value: 'fin', label: 'Finance & Bisnis Internal', skills: ['Penganggaran', 'Laporan keuangan', 'Unit usaha'], porto: 'Lampirkan contoh RAB atau laporan keuangan (data sensitif disamarkan).' },
-  { value: 'tech', label: 'Teknologi', skills: ['Pengembangan web', 'Data', 'UI/UX'], porto: 'Tautan GitHub atau proyek yang bisa dicoba langsung.' },
+  { value: 'academic-units', group: 'COO', label: 'Academic Units Management', skills: ['Koordinasi unit akademik', 'Penjadwalan kelas', 'Manajemen pengajar'], porto: 'Lampirkan contoh jadwal, SOP, atau laporan unit akademik yang pernah kamu kelola.' },
+  { value: 'logistic', group: 'COO', label: 'Logistic', skills: ['Logistik lapangan', 'Pengadaan', 'Inventaris'], porto: 'Lampirkan daftar kebutuhan, rencana pengadaan, atau laporan logistik kegiatan.' },
+  { value: 'event', group: 'COO', label: 'Event Management', skills: ['Manajemen acara', 'Rundown', 'Koordinasi relawan'], porto: 'Lampirkan laporan kegiatan atau rundown acara yang pernah kamu pegang.' },
+  { value: 'public-relation', group: 'CMO', label: 'Public Relation', skills: ['Hubungan media', 'Kemitraan', 'Komunikasi publik'], porto: 'Lampirkan rilis pers, proposal kerja sama, atau liputan yang pernah kamu tangani.' },
+  { value: 'social-media', group: 'CMO', label: 'Social Media and Content Analyst', skills: ['Strategi konten', 'Analitik media sosial', 'Copywriting'], porto: 'Lampirkan akun atau laporan performa konten yang pernah kamu kelola.' },
+  { value: 'graphic-design', group: 'CMO', label: 'Graphic Design', skills: ['Desain grafis', 'Identitas visual', 'Layout publikasi'], porto: 'Behance atau folder Drive berisi desain terbaikmu.' },
+  { value: 'talent-growth', group: 'CHRO', label: 'Talent Growth', skills: ['Pengembangan anggota', 'Pelatihan', 'Budaya organisasi'], porto: 'Lampirkan program kaderisasi atau pelatihan internal yang pernah kamu rancang.' },
+  { value: 'talent-strategist', group: 'CHRO', label: 'Talent Strategist', skills: ['Rekrutmen', 'Perencanaan SDM', 'Evaluasi kinerja'], porto: 'Lampirkan alur rekrutmen atau kerangka evaluasi anggota yang pernah kamu susun.' },
+  { value: 'curriculum', group: 'CID', label: 'Curriculum', skills: ['Penyusunan kurikulum', 'Materi ajar', 'Desain pembelajaran'], porto: 'Lampirkan contoh kurikulum, silabus, atau materi ajar buatanmu.' },
+  { value: 'learning-research', group: 'CID', label: 'Learning Research', skills: ['Riset pendidikan', 'Analisis data', 'Evaluasi program'], porto: 'Lampirkan tulisan riset, laporan survei, atau evaluasi program.' },
+  { value: 'product-design', group: 'CID', label: 'Product & Website Design', skills: ['UI/UX', 'Pengembangan website', 'Prototyping'], porto: 'Tautan Figma, Behance, GitHub, atau website yang pernah kamu buat.' },
 ];
+
+export const divisionGroups: Record<string, string> = {
+  COO: 'Chief Operation Officer (COO)',
+  CMO: 'Chief Marketing Officer (CMO)',
+  CHRO: 'Chief Human Resources Officer (CHRO)',
+  CID: 'Chief Innovation and Development (CID)',
+};
 
 export const workflow = [
   { no: '01', tag: 'LOOK', title: 'Asesmen kebutuhan', desc: 'Survei lapangan dan data sekunder untuk memetakan masalah.', gold: true },

@@ -99,10 +99,17 @@ export function SelectField({
 }: BaseProps & {
   value: string;
   onChange: (v: string) => void;
-  options: Array<{ value: string; label: string }>;
+  options: Array<{ value: string; label: string; group?: string }>;
   placeholder: string;
 }) {
   const { id, hint, error, tone = 'default' } = base;
+  const groups = [...new Set(options.map((o) => o.group))];
+  const renderOptions = (list: typeof options) =>
+    list.map((o) => (
+      <option key={o.value} value={o.value}>
+        {o.label}
+      </option>
+    ));
   return (
     <Field {...base}>
       <select
@@ -115,11 +122,15 @@ export function SelectField({
         className={cn(controlClass(tone, error), 'pr-10')}
       >
         <option value="">{placeholder}</option>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
+        {groups.map((g) =>
+          g ? (
+            <optgroup key={g} label={g}>
+              {renderOptions(options.filter((o) => o.group === g))}
+            </optgroup>
+          ) : (
+            renderOptions(options.filter((o) => !o.group))
+          ),
+        )}
       </select>
     </Field>
   );

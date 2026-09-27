@@ -87,6 +87,140 @@ body {
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 
+/* Pita core values: berjalan ke kiri, berhenti saat kartu di-hover atau difokus. */
+@keyframes value-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.value-track {
+  animation: value-scroll 45s linear infinite;
+}
+.value-marquee:hover .value-track,
+.value-marquee:focus-within .value-track {
+  animation-play-state: paused;
+}
+.value-card {
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.5s ease;
+}
+.value-photo {
+  filter: grayscale(1) contrast(1.05);
+  transition:
+    filter 0.6s ease,
+    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.value-badge {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.6);
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Penjelasan tertutup lalu membuka (0fr -> 1fr) sebagai pop up di panel kaca. */
+.value-desc {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.35s ease;
+}
+.value-card:is(:hover, :focus-visible) {
+  transform: translateY(-10px) rotate(-1deg);
+  box-shadow:
+    0 0 0 3px var(--color-gold),
+    0 30px 50px -24px rgba(11, 59, 46, 0.6);
+}
+.value-card:is(:hover, :focus-visible) .value-photo {
+  filter: none;
+  transform: scale(1.08);
+}
+.value-card:is(:hover, :focus-visible) .value-badge {
+  opacity: 1;
+  transform: none;
+}
+.value-card:is(:hover, :focus-visible) .value-desc {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+/* Perangkat sentuh tidak punya hover: tampilkan penjelasan dan warna sejak awal. */
+@media (hover: none) {
+  .value-photo {
+    filter: none;
+  }
+  .value-badge,
+  .value-desc {
+    opacity: 1;
+    transform: none;
+    grid-template-rows: 1fr;
+  }
+}
+
+/* Gumpalan warna blur di belakang foto pimpinan, bergeser pelan seperti cahaya. */
+@keyframes chief-blob {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(12%, -8%) scale(1.12);
+  }
+  66% {
+    transform: translate(-10%, 10%) scale(0.92);
+  }
+}
+.chief-blob {
+  animation: chief-blob 14s ease-in-out infinite;
+}
+
+/* Diagram misi: titik orbit berputar pelan, cahaya di belakang logo bernapas. */
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.orbit-spin {
+  transform-box: view-box;
+  transform-origin: 220px 220px;
+  animation: orbit-spin 40s linear infinite;
+}
+/* Ikon misi di cincin: lapisan HTML berputar searah titik SVG, ikonnya berputar balik agar tetap tegak. */
+.orbit-spin-layer {
+  animation: orbit-spin 40s linear infinite;
+}
+.orbit-counter {
+  animation: orbit-spin 40s linear infinite reverse;
+}
+/* Berhenti saat kursor di atas cincin, supaya ikon mudah diklik. */
+.orbit:hover :is(.orbit-spin, .orbit-spin-layer, .orbit-counter) {
+  animation-play-state: paused;
+}
+@keyframes orbit-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+.orbit-pulse {
+  animation: orbit-pulse 5s ease-in-out infinite;
+}
+/* Sapuan kuas visi tergambar dari kiri saat kartunya muncul. */
+.brush path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.5s;
+}
+.reveal:not(.is-in) .brush path {
+  stroke-dashoffset: 1;
+}
+
 /* Mengambang pelan: naik-turun beberapa piksel dengan sedikit miring, seperti bernapas. */
 @keyframes float-soft {
   0%,
@@ -118,8 +252,17 @@ body {
   }
   .rise,
   .float-soft,
-  .dash-flow {
+  .dash-flow,
+  .value-track,
+  .chief-blob,
+  .orbit-spin,
+  .orbit-spin-layer,
+  .orbit-counter,
+  .orbit-pulse {
     animation: none;
+  }
+  .value-marquee {
+    overflow-x: auto;
   }
   .reveal,
   .grow-x {

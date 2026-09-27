@@ -3,6 +3,7 @@
 import { ArrowRight, Check, Clock, HeartHandshake } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { contact } from '@/lib/content';
+import type { RecruitmentStatus } from '@/lib/recruitment';
 import { useForm } from '@/hooks/use-form';
 import { Container } from '@/components/ui/section';
 import { StatusBadge } from '@/components/ui/status-badge';
@@ -46,7 +47,8 @@ const perks = [
   { icon: HeartHandshake, text: 'Bertemu teman seperjuangan', gold: true },
 ];
 
-export function MemberForm() {
+export function MemberForm({ status }: { status: RecruitmentStatus }) {
+  const waitlist = status === 'waitlist';
   const form = useForm(initial, () => ({
     nama: { required: true },
     usia: { required: true, min: 14, max: 70, rangeMsg: 'Usia relawan antara 14 dan 70 tahun.' },
@@ -67,12 +69,14 @@ export function MemberForm() {
     <Container className="grid items-start gap-10 py-12 lg:grid-cols-[440px_minmax(0,1fr)] lg:gap-12 lg:py-16">
       <div className="flex flex-col gap-6 rounded-[32px] bg-mint p-8 sm:p-11 lg:sticky lg:top-28">
         <BackToRoles label="Pilihan peran" className="text-brand hover:text-forest" />
-        <StatusBadge status="rolling" className="w-fit" />
+        <StatusBadge status={status} className="w-fit" />
         <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-forest sm:text-[44px]">
           Hai, calon ThreeLearnian!
         </h1>
         <p className="text-[17px] leading-relaxed text-muted">
-          Satu halaman, sekitar tiga menit. Setelah terdaftar, kamu akan menerima info aksi terdekat sesuai minatmu.
+          {waitlist
+            ? 'Pendaftaran relawan sedang ditutup. Isi formulir ini untuk masuk daftar tunggu; kami menghubungimu saat pendaftaran dibuka kembali.'
+            : 'Satu halaman, sekitar tiga menit. Setelah terdaftar, kamu akan menerima info aksi terdekat sesuai minatmu.'}
         </p>
         <ul className="flex flex-col gap-4">
           {perks.map(({ icon: Icon, text, gold }) => (
@@ -96,9 +100,13 @@ export function MemberForm() {
           <span className="flex size-16 items-center justify-center rounded-full bg-gold text-forest">
             <Check className="size-8" strokeWidth={2.6} aria-hidden />
           </span>
-          <h2 className="text-[32px] font-extrabold">Selamat datang, {v.nama}!</h2>
+          <h2 className="text-[32px] font-extrabold">
+            {waitlist ? `Terima kasih, ${v.nama}!` : `Selamat datang, ${v.nama}!`}
+          </h2>
           <p className="text-base leading-relaxed text-sage">
-            Kamu resmi jadi ThreeLearnian. Info aksi terdekat di {v.kota} akan dikirim ke WhatsApp {v.wa}.
+            {waitlist
+              ? `Kamu masuk daftar tunggu relawan. Kami akan mengabari lewat WhatsApp ${v.wa} saat pendaftaran dibuka.`
+              : `Kamu resmi jadi ThreeLearnian. Info aksi terdekat di ${v.kota} akan dikirim ke WhatsApp ${v.wa}.`}
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
             <a
@@ -201,7 +209,7 @@ export function MemberForm() {
               disabled={form.submitting}
               className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-forest px-8 font-extrabold text-white transition hover:bg-brand disabled:opacity-60 sm:ml-auto"
             >
-              Gabung sekarang
+              {waitlist ? 'Submit' : 'Gabung sekarang'}
               <ArrowRight className="size-[18px]" aria-hidden />
             </button>
           </div>

@@ -18,7 +18,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import { divisions } from '@/lib/content';
+import { divisionGroups } from '@/lib/content';
 import type { RecruitmentStatus } from '@/lib/recruitment';
 import { StatusBadge } from '@/components/ui/status-badge';
 
@@ -51,7 +51,7 @@ type Role = {
 
 const waitlistCta = (s: RecruitmentStatus, open: string) => (s === 'waitlist' ? 'Masuk daftar tunggu' : open);
 
-function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus): Role[] {
+function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus, member: RecruitmentStatus): Role[] {
   return [
     {
       id: 'bod',
@@ -62,7 +62,7 @@ function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus): Role[
       subtitle: 'Pimpinan eksekutif strategis',
       desc: 'Untuk pemimpin yang siap memegang arah divisi, membangun tim, dan bertanggung jawab atas dampak program.',
       facts: [
-        { icon: Users, text: '6 posisi: CMO, CHRO, CFO, COO, CIDO, CTO' },
+        { icon: Users, text: '5 posisi: CMO, CHRO, CFO, COO, CIDO' },
         { icon: Clock, text: 'Minimal 15–20 jam per minggu' },
         { icon: FileText, text: 'CV, portofolio kepemimpinan, 2 esai' },
       ],
@@ -88,7 +88,7 @@ function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus): Role[
       title: 'Associate',
       subtitle: 'Manager & Staff Divisi',
       desc: 'Untuk pelaksana program dan manajer teknis yang ingin berkontribusi sesuai keahlian.',
-      chips: divisions.map((d) => d.label),
+      chips: Object.keys(divisionGroups),
       facts: [
         { icon: Clock, text: '8–12 jam per minggu' },
         { icon: FileText, text: 'CV, portofolio teknis, studi kasus' },
@@ -110,7 +110,7 @@ function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus): Role[
     {
       id: 'member',
       opsi: 'OPSI 03 · RELAWAN',
-      status: 'rolling',
+      status: member,
       icon: HeartHandshake,
       title: 'Member / Relawan',
       subtitle: 'ThreeLearnian',
@@ -120,7 +120,7 @@ function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus): Role[
         { icon: Check, text: 'Tanpa CV, tanpa esai, satu halaman' },
       ],
       href: '/daftar/member',
-      cta: 'Gabung jadi ThreeLearnian',
+      cta: waitlistCta(member, 'Gabung jadi ThreeLearnian'),
       theme: {
         surface: 'bg-mint border-mint-line',
         title: 'text-forest',
@@ -294,8 +294,16 @@ function OpenCard({ role, onClose, ref }: { role: Role; onClose: () => void; ref
   );
 }
 
-export function RoleDeck({ bod, associate }: { bod: RecruitmentStatus; associate: RecruitmentStatus }) {
-  const roles = buildRoles(bod, associate);
+export function RoleDeck({
+  bod,
+  associate,
+  member,
+}: {
+  bod: RecruitmentStatus;
+  associate: RecruitmentStatus;
+  member: RecruitmentStatus;
+}) {
+  const roles = buildRoles(bod, associate, member);
   const [openId, setOpenId] = useState<RoleId | null>(null);
   const mounted = useRef(false);
   const stage = useRef<HTMLDivElement>(null);

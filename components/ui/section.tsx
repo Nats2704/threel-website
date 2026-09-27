@@ -65,6 +65,7 @@ export function PageHeader({
   lead,
   image,
   aside,
+  className,
   children,
 }: {
   crumb: string;
@@ -74,6 +75,8 @@ export function PageHeader({
   image?: string;
   /** Konten kolom kanan di desktop (mis. ilustrasi); di HP turun ke bawah teks. */
   aside?: React.ReactNode;
+  /** Mis. latar tembus pandang saat halaman punya latar sendiri. */
+  className?: string;
   children?: React.ReactNode;
 }) {
   const text = (
@@ -93,7 +96,7 @@ export function PageHeader({
   );
 
   return (
-    <section className="relative isolate overflow-hidden bg-mint py-14 lg:py-[72px]">
+    <section className={cn('relative isolate overflow-hidden bg-mint py-14 lg:py-[72px]', className)}>
       {image ? (
         <div aria-hidden className="absolute inset-0 -z-10 lg:left-[36%]">
           <Image src={image} alt="" fill priority sizes="(min-width: 1024px) 64vw, 100vw" className="object-cover object-[center_35%]" />
