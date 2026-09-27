@@ -52,13 +52,15 @@ const divisionOptions = divisions.map((d) => ({ value: d.value, label: `Divisi $
 
 function SectionCard({ no, title, children }: { no: string; title: string; children: React.ReactNode }) {
   return (
-    <fieldset className="flex flex-col gap-5 rounded-2xl border border-line bg-white p-6 sm:p-8">
-      <legend className="float-left flex w-full items-center gap-3 p-0">
-        <span className="rounded-lg bg-brand px-2.5 py-1 font-mono text-xs font-semibold text-white">{no}</span>
-        <span className="text-[19px] font-extrabold text-forest">{title}</span>
-      </legend>
-      {children}
-    </fieldset>
+    <div className="rounded-2xl border border-line bg-white p-6 sm:p-8">
+      <fieldset className="m-0 min-w-0 border-0 p-0">
+        <legend className="mb-6 flex w-full items-center gap-3 border-b border-line p-0 pb-4">
+          <span className="rounded-lg bg-brand px-2.5 py-1 font-mono text-xs font-semibold text-white">{no}</span>
+          <span className="text-[19px] font-extrabold leading-tight text-forest">{title}</span>
+        </legend>
+        <div className="flex flex-col gap-5">{children}</div>
+      </fieldset>
+    </div>
   );
 }
 

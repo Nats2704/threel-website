@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowDown, ArrowRight, BookOpen, Eye, Flag } from 'lucide-react';
 import { Reveal } from '@/components/ui/reveal';
+import { DragMarquee } from '@/components/ui/drag-marquee';
 import { impactMetrics, lookLearnLead, pillars, stats, type Stat } from '@/lib/content';
 import { cn } from '@/lib/cn';
 import { ArrowLink, Container, Eyebrow, PhotoPlaceholder, SectionHeading } from '@/components/ui/section';
@@ -139,14 +140,14 @@ function HowWeMove() {
         </Reveal>
       </Container>
       <Reveal delay={150} className="marquee-mask mt-12 lg:mt-14">
-        <ul className="marquee-track flex w-max gap-6 px-3">
+        <DragMarquee className="gap-6 px-3">
           {half.map((s, i) => (
             <StageCard key={`a${i}`} stage={s} hidden={i >= lookLearnLead.length} />
           ))}
           {half.map((s, i) => (
             <StageCard key={`b${i}`} stage={s} hidden />
           ))}
-        </ul>
+        </DragMarquee>
       </Reveal>
     </section>
   );

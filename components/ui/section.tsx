@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
@@ -62,28 +63,55 @@ export function PageHeader({
   crumb,
   title,
   lead,
+  image,
+  aside,
   children,
 }: {
   crumb: string;
   title: string;
   lead: string;
+  /** Foto latar dekoratif; di desktop mengisi sisi kanan, di HP menjadi tekstur tipis di balik teks. */
+  image?: string;
+  /** Konten kolom kanan di desktop (mis. ilustrasi); di HP turun ke bawah teks. */
+  aside?: React.ReactNode;
   children?: React.ReactNode;
 }) {
+  const text = (
+    <>
+      <nav aria-label="Breadcrumb" className="font-mono text-xs font-semibold tracking-[0.1em] text-muted">
+        <Link href="/" className="text-brand hover:text-forest">
+          BERANDA
+        </Link>{' '}
+        / {crumb}
+      </nav>
+      <h1 className="max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-tight text-forest sm:text-[52px]">
+        {title}
+      </h1>
+      <p className="max-w-3xl text-lg leading-relaxed text-muted">{lead}</p>
+      {children}
+    </>
+  );
+
   return (
-    <section className="bg-mint py-14 lg:py-[72px]">
-      <Container className="flex flex-col gap-5">
-        <nav aria-label="Breadcrumb" className="font-mono text-xs font-semibold tracking-[0.1em] text-muted">
-          <Link href="/" className="text-brand hover:text-forest">
-            BERANDA
-          </Link>{' '}
-          / {crumb}
-        </nav>
-        <h1 className="max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-tight text-forest sm:text-[52px]">
-          {title}
-        </h1>
-        <p className="max-w-3xl text-lg leading-relaxed text-muted">{lead}</p>
-        {children}
-      </Container>
+    <section className="relative isolate overflow-hidden bg-mint py-14 lg:py-[72px]">
+      {image ? (
+        <div aria-hidden className="absolute inset-0 -z-10 lg:left-[36%]">
+          <Image src={image} alt="" fill priority sizes="(min-width: 1024px) 64vw, 100vw" className="object-cover object-[center_35%]" />
+          {/* HP: tirai mint rata supaya teks selebar layar tetap terbaca. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-mint/90 via-mint/85 to-mint/95 lg:hidden" />
+          {/* Desktop: foto memudar ke mint di sisi teks, tampil jelas di kanan. */}
+          <div className="absolute inset-0 hidden bg-gradient-to-r from-mint from-5% via-mint/75 via-40% to-mint/0 lg:block" />
+          <div className="absolute inset-x-0 bottom-0 hidden h-20 bg-gradient-to-t from-mint/60 to-transparent lg:block" />
+        </div>
+      ) : null}
+      {aside ? (
+        <Container className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14">
+          <div className="flex flex-col gap-5">{text}</div>
+          {aside}
+        </Container>
+      ) : (
+        <Container className="flex flex-col gap-5">{text}</Container>
+      )}
     </section>
   );
 }

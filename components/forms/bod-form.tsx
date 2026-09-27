@@ -46,18 +46,20 @@ const steps = [
 
 function SectionCard({ no, title, desc, children }: { no: string; title: string; desc: string; children: React.ReactNode }) {
   return (
-    <fieldset className="flex flex-col gap-6 rounded-md border border-[#DCE3DF] bg-white p-6 sm:p-9">
-      <legend className="float-left flex w-full items-start gap-4 p-0">
-        <span className="flex size-9 shrink-0 items-center justify-center rounded border border-forest font-mono text-[13px] font-semibold text-forest">
-          {no}
-        </span>
-        <span className="flex flex-col gap-1">
-          <span className="text-xl font-extrabold text-forest">{title}</span>
-          <span className="text-sm font-normal text-muted">{desc}</span>
-        </span>
-      </legend>
-      {children}
-    </fieldset>
+    <div className="rounded-md border border-[#DCE3DF] bg-white p-6 sm:p-9">
+      <fieldset className="m-0 min-w-0 border-0 p-0">
+        <legend className="mb-7 flex w-full items-start gap-4 border-b border-[#DCE3DF] p-0 pb-5">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded border border-forest font-mono text-[13px] font-semibold text-forest">
+            {no}
+          </span>
+          <span className="flex flex-col gap-1 pt-0.5">
+            <span className="text-xl font-extrabold leading-tight text-forest">{title}</span>
+            <span className="text-sm font-normal leading-relaxed text-muted">{desc}</span>
+          </span>
+        </legend>
+        <div className="flex flex-col gap-6">{children}</div>
+      </fieldset>
+    </div>
   );
 }
 

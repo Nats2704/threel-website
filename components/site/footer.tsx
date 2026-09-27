@@ -65,9 +65,8 @@ export function Footer() {
           </a>
         </div>
       </div>
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-2 border-t border-white/15 px-4 py-6 text-[13px] text-sage-muted sm:px-6 md:flex-row md:justify-between lg:px-8">
-        <span>© 2026 ThreeL Community (Threel.Comm). Hak cipta dilindungi.</span>
-        <span>Organisasi nirlaba · [Nomor Akta Pendirian / SK Kemenkumham]</span>
+      <div className="mx-auto max-w-[1200px] border-t border-white/15 px-4 py-6 text-center text-[13px] text-sage-muted sm:px-6 lg:px-8">
+        © 2026 ThreeL Community (Threel.Comm). Hak cipta dilindungi.
       </div>
     </footer>
   );

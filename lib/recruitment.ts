@@ -24,7 +24,7 @@ export const statusMeta: Record<
     text: 'text-green-900',
   },
   waitlist: {
-    label: 'Closed · Daftar Tunggu',
+    label: 'Closed',
     note: 'Batch ditutup. Pendaftar masuk daftar tunggu batch berikutnya.',
     badge: 'bg-amber-100 text-amber-900',
     dot: 'bg-amber-600',

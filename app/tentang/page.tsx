@@ -1,16 +1,10 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { cLevels, coreValues, missions } from '@/lib/content';
 import { ArrowLink, Container, Eyebrow, PageHeader, SectionHeading } from '@/components/ui/section';
 
 export const metadata: Metadata = { title: 'Tentang Kami' };
 
-const facts = [
-  { label: 'Nama resmi', value: 'ThreeL Community (Threel.Comm)' },
-  { label: 'Bentuk', value: 'Organisasi pemuda nirlaba' },
-  { label: 'Fokus', value: 'Kemiskinan, pendidikan, teknologi, pemberdayaan sosial' },
-  { label: 'Didirikan', value: '[tahun berdiri]', placeholder: true },
-  { label: 'Legalitas', value: '[nomor akta / SK]', placeholder: true },
-];
 
 const connector = 'bg-[#B9D3C5]';
 
@@ -21,16 +15,21 @@ export default function TentangPage() {
         crumb="TENTANG KAMI"
         title="Tumbuh dari keresahan, bergerak untuk solusi."
         lead="ThreeL berasal dari tiga L: Look, Learn, Lead. Kami melihat masalah dari dekat, belajar bersama, lalu memimpin aksi yang berdampak bagi masyarakat prasejahtera."
-      >
-        <dl className="mt-4 grid rounded-[20px] border border-mint-line bg-white px-6 py-2 sm:grid-cols-2 lg:max-w-3xl">
-          {facts.map((f) => (
-            <div key={f.label} className="flex flex-col gap-1 border-b border-[#EDF2EF] py-3.5 last:border-0 sm:pr-6">
-              <dt className="text-sm text-muted">{f.label}</dt>
-              <dd className={f.placeholder ? 'text-sm font-bold text-gold-ink' : 'text-sm font-bold'}>{f.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </PageHeader>
+        aside={
+          // Margin negatif di desktop membuat pohon hampir menyentuh batas atas dan bawah header.
+          <div className="float-soft mx-auto w-full max-w-[380px] sm:max-w-[440px] lg:-my-12 lg:max-w-none">
+            <Image
+              src="/images/maskot-tentang.webp"
+              alt="Maskot pohon ThreeL melambaikan tangan sambil tersenyum."
+              width={1541}
+              height={1636}
+              priority
+              sizes="(min-width: 1024px) 500px, (min-width: 640px) 440px, 380px"
+              className="mx-auto h-auto w-full drop-shadow-[0_24px_30px_rgba(11,59,46,0.18)] lg:h-[540px] lg:w-auto"
+            />
+          </div>
+        }
+      />
 
       <section aria-label="Visi dan misi" className="py-20 lg:py-24">
         <Container className="grid gap-6 lg:grid-cols-2">

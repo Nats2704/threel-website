@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { pillars, workflow } from '@/lib/content';
 import { cn } from '@/lib/cn';
-import { Container, Eyebrow, PageHeader, SectionHeading } from '@/components/ui/section';
+import { Container, PageHeader, SectionHeading } from '@/components/ui/section';
+import { WorkflowTimeline } from '@/components/site/workflow-timeline';
 
 export const metadata: Metadata = { title: 'Program' };
 
@@ -13,6 +14,7 @@ export default function ProgramPage() {
         crumb="PROGRAM"
         title="Program kerja ThreeL"
         lead="Sembilan program dalam tiga pilar. Setiap program dijalankan dengan alur Look, Learn, Lead dan dilaporkan secara terbuka kepada mitra."
+        image="/images/program-hero.jpg"
       >
         <nav aria-label="Lompat ke pilar" className="flex flex-wrap gap-3 pt-2">
           {pillars.map((p) => (
@@ -102,7 +104,7 @@ export default function ProgramPage() {
       ))}
 
       <section id="alur" aria-labelledby="alur-title" className="scroll-mt-20 bg-forest py-20 text-white lg:py-24">
-        <Container className="flex flex-col gap-12">
+        <Container>
           <SectionHeading
             id="alur-title"
             dark
@@ -110,26 +112,10 @@ export default function ProgramPage() {
             title="Dari data lapangan sampai laporan terbuka."
             aside="Mitra dapat bergabung di tahap mana pun. Setiap program ditutup dengan laporan dampak yang bisa diverifikasi."
           />
-          <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {workflow.map((w) => (
-              <li key={w.no} className="flex flex-col gap-3 rounded-[18px] border border-white/15 bg-white/6 p-6">
-                <span
-                  className={cn(
-                    'flex size-11 items-center justify-center rounded-xl font-mono font-semibold text-forest',
-                    w.gold ? 'bg-gold' : 'bg-white',
-                  )}
-                >
-                  {w.no}
-                </span>
-                <Eyebrow tone={w.gold ? 'gold' : 'muted'}>
-                  <span className={w.gold ? undefined : 'text-sage-muted'}>{w.tag}</span>
-                </Eyebrow>
-                <h3 className="text-[19px] font-extrabold">{w.title}</h3>
-                <p className="text-sm leading-relaxed text-sage">{w.desc}</p>
-              </li>
-            ))}
-          </ol>
         </Container>
+        <div className="mt-10 lg:mt-16">
+          <WorkflowTimeline steps={workflow} />
+        </div>
       </section>
     </>
   );
