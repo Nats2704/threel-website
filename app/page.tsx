@@ -1,14 +1,17 @@
 import Link from 'next/link';
-import { ArrowDown, ArrowRight } from 'lucide-react';
+import { ArrowDown, ArrowRight, BookOpen, Eye, Flag } from 'lucide-react';
+import { Reveal } from '@/components/ui/reveal';
 import { impactMetrics, lookLearnLead, pillars, stats, type Stat } from '@/lib/content';
 import { cn } from '@/lib/cn';
 import { ArrowLink, Container, Eyebrow, PhotoPlaceholder, SectionHeading } from '@/components/ui/section';
 import { PillarIcon } from '@/components/ui/pillar-icon';
+import { HeroPlanet } from '@/components/site/hero-planet';
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <HowWeMove />
       <ProblemContext />
       <Pillars />
       <MengajarSpotlight />
@@ -20,33 +23,43 @@ export default function HomePage() {
 
 function Hero() {
   return (
-    <section aria-labelledby="hero-title" className="py-14 lg:py-24">
-      <Container className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-20">
-        <div className="flex flex-col gap-7">
-          <div className="flex w-fit flex-wrap items-center gap-x-2.5 gap-y-1 rounded-2xl border border-mint-line bg-mint px-4 py-2 font-mono text-[13px] font-semibold text-forest sm:rounded-full">
-            <span className="size-2 rounded-full bg-gold-deep" aria-hidden />
-            <span>#GenerateGreatProblemSolver</span>
-            <span className="hidden text-slate-400 sm:inline">|</span>
-            <span>Look, Learn, Lead</span>
-          </div>
+    <section
+      aria-labelledby="hero-title"
+      className="relative isolate flex flex-col overflow-hidden bg-[radial-gradient(110%_85%_at_78%_30%,#eef7f2_0%,#ffffff_60%)] lg:min-h-[calc(100dvh-5rem)]"
+    >
+      <Container className="pointer-events-none relative z-10 flex flex-1 flex-col pb-8 pt-14 lg:pb-10 lg:pt-20">
+        <div className="pointer-events-auto my-auto flex flex-col gap-7 lg:max-w-[min(600px,44vw)]">
+          <p className="rise font-mono text-xs font-semibold uppercase tracking-[0.28em] text-brand">
+            #ShapingChangemakers · Look, Learn, Lead
+          </p>
           <h1
             id="hero-title"
-            className="text-4xl font-extrabold leading-[1.06] tracking-[-0.035em] text-forest sm:text-5xl lg:text-[58px]"
+            className="text-[38px] font-extrabold leading-[1.04] tracking-[-0.04em] text-forest sm:text-[52px] lg:text-[42px] xl:text-[50px]"
           >
-            Memberdayakan pemuda untuk{' '}
-            <span className="[box-decoration-break:clone] shadow-[inset_0_-14px_0_var(--color-gold-soft)]">
-              mengentaskan kemiskinan
-            </span>{' '}
-            lewat pendidikan dan teknologi.
+            <span className="rise block" style={{ '--d': '80ms' } as React.CSSProperties}>
+              Memberdayakan pemuda, mengentaskan kemiskinan
+            </span>
+            <span
+              className="rise mt-1 block font-serif text-[44px] font-normal italic leading-[1.02] tracking-[-0.01em] text-brand-bright sm:text-[60px] lg:text-[50px] xl:text-[58px]"
+              style={{ '--d': '200ms' } as React.CSSProperties}
+            >
+              lewat pendidikan &amp; teknologi.
+            </span>
           </h1>
-          <p className="text-lg leading-relaxed text-muted sm:text-xl">
+          <p
+            className="rise max-w-[460px] text-lg leading-relaxed text-muted sm:text-xl"
+            style={{ '--d': '320ms' } as React.CSSProperties}
+          >
             Menjembatani potensi pemuda dengan aksi nyata bagi masyarakat prasejahtera, dari ruang kelas dan posko donor
             darah hingga kebun kota.
           </p>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
+          <div
+            className="rise flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7"
+            style={{ '--d': '440ms' } as React.CSSProperties}
+          >
             <Link
               href="#pilar"
-              className="inline-flex h-[54px] items-center justify-center gap-2.5 rounded-full bg-forest px-7 font-bold text-white transition hover:bg-brand"
+              className="inline-flex h-[54px] items-center justify-center gap-2.5 rounded-full bg-forest px-7 font-bold text-white shadow-[0_10px_30px_-12px_rgba(11,59,46,0.6)] transition hover:bg-brand"
             >
               Kenali Program Kami
               <ArrowDown className="size-[18px]" aria-hidden />
@@ -55,37 +68,86 @@ function Hero() {
               Ajukan kemitraan
             </ArrowLink>
           </div>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-muted">
-            <span className="font-mono text-xs tracking-[0.08em] text-slate-500">FOKUS</span>
-            {['Pendidikan', 'Teknologi', 'Kesehatan', 'Lingkungan'].map((f) => (
-              <span key={f}>{f}</span>
-            ))}
-          </div>
         </div>
 
-        <div className="flex flex-col gap-2 rounded-3xl bg-forest p-8 text-white">
-          <div className="flex items-center justify-between pb-3">
-            <Eyebrow tone="gold">Cara kami bergerak</Eyebrow>
-            <span className="font-mono text-xs text-sage-muted">3 TAHAP</span>
-          </div>
-          <ol className="flex flex-col">
-            {lookLearnLead.map((s) => (
-              <li key={s.no} className="flex gap-4 border-t border-white/12 py-5">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/8 font-mono text-[15px] font-semibold text-gold">
-                  {s.no}
-                </span>
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-[22px] font-extrabold">{s.title}</span>
-                  <span className="text-[15px] leading-relaxed text-sage">{s.desc}</span>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <p className="rounded-2xl bg-gold px-4 py-4 text-sm font-semibold leading-relaxed text-forest">
-            Satu siklus, satu tujuan: pemuda yang tumbuh menjadi <strong>great problem solver</strong>.
+        <div
+          className="rise pointer-events-auto mt-12 flex flex-col gap-3 lg:mt-10"
+          style={{ '--d': '560ms' } as React.CSSProperties}
+        >
+          <span className="h-px w-8 bg-slate-400" aria-hidden />
+          <p className="font-mono text-[11px] font-semibold uppercase leading-[1.9] tracking-[0.22em] text-slate-500">
+            Fokus: Pendidikan · Teknologi
+            <br />
+            Kesehatan · Lingkungan
           </p>
         </div>
       </Container>
+
+      <div className="relative h-[400px] sm:h-[480px] lg:absolute lg:inset-0 lg:h-auto">
+        <HeroPlanet />
+      </div>
+
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent"
+      />
+    </section>
+  );
+}
+
+const stageIcons = { Look: Eye, Learn: BookOpen, Lead: Flag } as const;
+
+function StageCard({ stage, hidden }: { stage: (typeof lookLearnLead)[number]; hidden?: boolean }) {
+  const Icon = stageIcons[stage.title as keyof typeof stageIcons];
+  return (
+    <li
+      aria-hidden={hidden || undefined}
+      className="flex w-[300px] shrink-0 flex-col rounded-3xl border border-white/10 bg-white/[0.035] sm:w-[480px]"
+    >
+      <div className="flex flex-1 flex-col gap-6 p-7 sm:p-9">
+        <div className="flex items-center gap-4">
+          {/* Tempat logo tiap tahap; ganti ikon ini dengan <Image> saat logonya sudah siap. */}
+          <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gold text-forest sm:size-16">
+            <Icon className="size-7 sm:size-8" strokeWidth={2} aria-hidden />
+          </span>
+          <span className="text-4xl font-extrabold tracking-[-0.03em] text-white sm:text-5xl">{stage.title}</span>
+        </div>
+        <p className="text-lg leading-snug text-white/90 sm:text-[22px]">{stage.detail}</p>
+      </div>
+      <div className="flex items-stretch border-t border-white/10 text-sm">
+        <div className="flex flex-1 flex-col gap-0.5 px-7 py-4 sm:px-9">
+          <span className="font-mono text-xs font-semibold tracking-[0.14em] text-gold">TAHAP {stage.no}</span>
+          <span className="text-sage-muted">dari 3 tahap</span>
+        </div>
+        <span className="flex items-center border-l border-white/10 px-6 text-right text-sage sm:px-7">{stage.tag}</span>
+      </div>
+    </li>
+  );
+}
+
+function HowWeMove() {
+  // Dua paruh identik (masing-masing 2x tiga kartu) supaya geseran -50% berulang tanpa celah di layar lebar.
+  const half = [...lookLearnLead, ...lookLearnLead];
+  return (
+    <section aria-labelledby="gerak-title" className="overflow-hidden bg-forest py-20 lg:py-24">
+      <Container>
+        <Reveal>
+          <h2 id="gerak-title" className="text-3xl font-extrabold leading-tight tracking-tight sm:text-[44px]">
+            <span className="block text-white">Cara kami bergerak</span>
+            <span className="block text-sage-muted">Satu siklus, satu tujuan.</span>
+          </h2>
+        </Reveal>
+      </Container>
+      <Reveal delay={150} className="marquee-mask mt-12 lg:mt-14">
+        <ul className="marquee-track flex w-max gap-6 px-3">
+          {half.map((s, i) => (
+            <StageCard key={`a${i}`} stage={s} hidden={i >= lookLearnLead.length} />
+          ))}
+          {half.map((s, i) => (
+            <StageCard key={`b${i}`} stage={s} hidden />
+          ))}
+        </ul>
+      </Reveal>
     </section>
   );
 }
@@ -93,7 +155,7 @@ function Hero() {
 function StatBar({ bar }: { bar: Stat['bar'] }) {
   if (bar.kind === 'segments') {
     return (
-      <div role="img" aria-label={`${bar.filled} dari ${bar.total}`} className="flex h-2 gap-1.5">
+      <div role="img" aria-label={`${bar.filled} dari ${bar.total}`} className="grow-x flex h-2 gap-1.5">
         {Array.from({ length: bar.total }, (_, i) => (
           <div key={i} className={cn('flex-1 rounded-full', i < bar.filled ? 'bg-brand' : 'bg-mint-deep')} />
         ))}
@@ -103,7 +165,7 @@ function StatBar({ bar }: { bar: Stat['bar'] }) {
   return (
     <div role="img" aria-label={`${bar.pct} persen`} className="flex h-2 rounded-full bg-mint-deep">
       <div
-        className={cn('rounded-full', bar.color === 'brand' ? 'bg-brand' : 'bg-gold-deep')}
+        className={cn('grow-x rounded-full', bar.color === 'brand' ? 'bg-brand' : 'bg-gold-deep')}
         style={{ width: `${bar.pct}%` }}
       />
     </div>
@@ -114,15 +176,22 @@ function ProblemContext() {
   return (
     <section aria-labelledby="konteks-title" className="bg-surface py-20 lg:py-24">
       <Container className="flex flex-col gap-12">
-        <SectionHeading
-          id="konteks-title"
-          eyebrow="Konteks masalah"
-          title="Tiga masalah yang tidak bisa menunggu generasi berikutnya."
-          aside="Setiap program ThreeL berangkat dari data. Angka di bawah ini menjadi titik awal kami menentukan di mana pemuda paling dibutuhkan."
-        />
+        <Reveal>
+          <SectionHeading
+            id="konteks-title"
+            eyebrow="Konteks masalah"
+            title="Tiga masalah yang tidak bisa menunggu generasi berikutnya."
+            aside="Setiap program ThreeL berangkat dari data. Angka di bawah ini menjadi titik awal kami menentukan di mana pemuda paling dibutuhkan."
+          />
+        </Reveal>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {stats.map((s) => (
-            <article key={s.label} className="flex flex-col gap-4 rounded-[20px] border border-line bg-white p-8">
+          {stats.map((s, i) => (
+            <Reveal
+              as="article"
+              key={s.label}
+              delay={i * 120}
+              className="flex flex-col gap-4 rounded-[20px] border border-line bg-white p-8 transition-shadow hover:shadow-[0_18px_40px_-24px_rgba(11,59,46,0.35)]"
+            >
               <span className="font-mono text-xs font-semibold uppercase tracking-[0.08em] text-muted">{s.label}</span>
               <span className="text-[56px] font-extrabold leading-none tracking-[-0.04em] text-forest sm:text-[64px]">
                 {s.value}
@@ -140,7 +209,7 @@ function ProblemContext() {
                 </ArrowLink>
                 <span className="font-mono text-xs text-slate-500">{s.source}</span>
               </div>
-            </article>
+            </Reveal>
           ))}
         </div>
       </Container>
@@ -152,20 +221,27 @@ function Pillars() {
   return (
     <section id="pilar" aria-labelledby="pilar-title" className="scroll-mt-20 py-20 lg:py-24">
       <Container className="flex flex-col gap-12">
-        <SectionHeading
-          id="pilar-title"
-          eyebrow="Pilar program kerja"
-          title="Sembilan program, tiga pilar, satu arah gerak."
-          aside={
-            <div className="flex flex-col gap-3.5">
-              <p>Program dikelompokkan agar mitra dan relawan mudah menemukan tempat untuk berkontribusi.</p>
-              <ArrowLink href="/program">Lihat detail program</ArrowLink>
-            </div>
-          }
-        />
+        <Reveal>
+          <SectionHeading
+            id="pilar-title"
+            eyebrow="Pilar program kerja"
+            title="Sembilan program, tiga pilar, satu arah gerak."
+            aside={
+              <div className="flex flex-col gap-3.5">
+                <p>Program dikelompokkan agar mitra dan relawan mudah menemukan tempat untuk berkontribusi.</p>
+                <ArrowLink href="/program">Lihat detail program</ArrowLink>
+              </div>
+            }
+          />
+        </Reveal>
         <div className="grid gap-6 lg:grid-cols-3">
-          {pillars.map((p) => (
-            <article key={p.id} className="flex flex-col overflow-hidden rounded-[20px] border border-line bg-white">
+          {pillars.map((p, i) => (
+            <Reveal
+              as="article"
+              key={p.id}
+              delay={i * 120}
+              className="flex flex-col overflow-hidden rounded-[20px] border border-line bg-white transition-[box-shadow,translate] duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(11,59,46,0.35)]"
+            >
               <div className="flex flex-col gap-4 bg-mint px-7 pb-6 pt-7">
                 <div className="flex items-center justify-between">
                   <PillarIcon icon={p.icon} />
@@ -189,7 +265,7 @@ function Pillars() {
                   Detail pilar {p.no}
                 </ArrowLink>
               </div>
-            </article>
+            </Reveal>
           ))}
         </div>
       </Container>
@@ -221,7 +297,7 @@ function MengajarSpotlight() {
   return (
     <section aria-labelledby="mengajar-title" className="bg-forest py-20 text-white lg:py-24">
       <Container className="grid items-center gap-12 lg:grid-cols-[440px_minmax(0,1fr)] lg:gap-16">
-        <div className="flex flex-col gap-5">
+        <Reveal className="flex flex-col gap-5">
           <Eyebrow tone="gold">Sorotan inisiatif mandiri</Eyebrow>
           <h2 id="mengajar-title" className="text-3xl font-extrabold leading-tight tracking-tight sm:text-[40px]">
             ThreeL Mengajar: kelas berbayar yang membiayai kelas gratis.
@@ -237,9 +313,9 @@ function MengajarSpotlight() {
             Pelajari model subsidi silang
             <ArrowRight className="size-[18px]" aria-hidden />
           </Link>
-        </div>
+        </Reveal>
 
-        <div className="flex flex-col gap-5">
+        <Reveal delay={180} className="flex flex-col gap-5">
           <div
             role="img"
             aria-label="Diagram: kelas persiapan PTN dan materi TPB ITB berbayar menghasilkan dana subsidi untuk bimbel gratis siswa prasejahtera"
@@ -285,7 +361,7 @@ function MengajarSpotlight() {
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );
@@ -295,39 +371,51 @@ function Impact() {
   return (
     <section aria-labelledby="dampak-title" className="py-20 lg:py-24">
       <Container className="flex flex-col gap-12">
-        <SectionHeading
-          id="dampak-title"
-          eyebrow="Dampak & dokumentasi"
-          title="Dampak yang bisa dihitung, cerita yang bisa dilihat."
-          aside="Angka dampak diperbarui setiap akhir semester dan dapat diverifikasi melalui laporan kegiatan untuk mitra."
-        />
+        <Reveal>
+          <SectionHeading
+            id="dampak-title"
+            eyebrow="Dampak & dokumentasi"
+            title="Dampak yang bisa dihitung, cerita yang bisa dilihat."
+            aside="Angka dampak diperbarui setiap akhir semester dan dapat diverifikasi melalui laporan kegiatan untuk mitra."
+          />
+        </Reveal>
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-          {impactMetrics.map((m) => (
-            <div
-              key={m.label}
-              className={cn('flex flex-col gap-2 border-t-[3px] pt-5', m.accent ? 'border-gold-deep' : 'border-brand')}
-            >
-              <span className="text-3xl font-extrabold tracking-tight text-forest sm:text-5xl">{m.value}</span>
-              <span className="text-[15px] font-semibold">{m.label}</span>
-              <span className="font-mono text-xs text-slate-500">{m.note}</span>
-            </div>
+          {impactMetrics.map((m, i) => (
+            <Reveal key={m.label} delay={i * 100}>
+              <div
+                className={cn(
+                  'flex flex-col gap-2 border-t-[3px] pt-5',
+                  m.accent ? 'border-gold-deep' : 'border-brand',
+                )}
+              >
+                <span className="text-3xl font-extrabold tracking-tight text-forest sm:text-5xl">{m.value}</span>
+                <span className="text-[15px] font-semibold">{m.label}</span>
+                <span className="font-mono text-xs text-slate-500">{m.note}</span>
+              </div>
+            </Reveal>
           ))}
         </div>
         <div className="flex flex-col gap-5 pt-2">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <Reveal className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-[22px] font-extrabold text-forest">Dokumentasi lapangan</h3>
             <ArrowLink href="/kabar">Lihat semua di Kabar</ArrowLink>
-          </div>
+          </Reveal>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:grid-rows-[220px_220px]">
-            <PhotoPlaceholder
-              caption="ThreeL Mengajar · [lokasi, tanggal]"
-              size="lg"
-              className="col-span-2 min-h-60 lg:row-span-2"
-            />
-            <PhotoPlaceholder caption="ThreeL Blood · [lokasi]" />
-            <PhotoPlaceholder caption="ThreeL Berakar · [lokasi]" tone="gold" />
-            <PhotoPlaceholder caption="ThreeL Berbagi · [lokasi]" tone="gold" />
-            <PhotoPlaceholder caption="ThreeL Berkelana · [lokasi]" />
+            <Reveal className="col-span-2 lg:row-span-2">
+              <PhotoPlaceholder caption="ThreeL Mengajar · [lokasi, tanggal]" size="lg" className="h-full min-h-60" />
+            </Reveal>
+            <Reveal delay={90}>
+              <PhotoPlaceholder caption="ThreeL Blood · [lokasi]" className="h-full" />
+            </Reveal>
+            <Reveal delay={180}>
+              <PhotoPlaceholder caption="ThreeL Berakar · [lokasi]" tone="gold" className="h-full" />
+            </Reveal>
+            <Reveal delay={270}>
+              <PhotoPlaceholder caption="ThreeL Berbagi · [lokasi]" tone="gold" className="h-full" />
+            </Reveal>
+            <Reveal delay={360}>
+              <PhotoPlaceholder caption="ThreeL Berkelana · [lokasi]" className="h-full" />
+            </Reveal>
           </div>
         </div>
       </Container>
@@ -339,7 +427,7 @@ function JoinCta() {
   return (
     <section aria-label="Ajakan bergabung dan bermitra" className="bg-mint py-16 lg:py-20">
       <Container className="grid gap-6 md:grid-cols-2">
-        <div className="flex flex-col gap-3.5 rounded-3xl bg-forest p-8 text-white sm:p-10">
+        <Reveal className="flex flex-col gap-3.5 rounded-3xl bg-forest p-8 text-white sm:p-10">
           <h2 className="text-[28px] font-extrabold tracking-tight sm:text-[30px]">Jadi bagian dari ThreeL</h2>
           <p className="text-base leading-relaxed text-sage">
             Pilih peranmu: Board of Director, Associate, atau relawan ThreeLearnian.
@@ -351,8 +439,8 @@ function JoinCta() {
             Daftar sekarang
             <ArrowRight className="size-[18px]" aria-hidden />
           </Link>
-        </div>
-        <div className="flex flex-col gap-3.5 rounded-3xl border border-mint-line bg-white p-8 sm:p-10">
+        </Reveal>
+        <Reveal delay={140} className="flex flex-col gap-3.5 rounded-3xl border border-mint-line bg-white p-8 sm:p-10">
           <h2 className="text-[28px] font-extrabold tracking-tight text-forest sm:text-[30px]">Bermitra dengan ThreeL</h2>
           <p className="text-base leading-relaxed text-muted">
             Untuk korporasi (CSR), instansi medis, kampus, dan komunitas yang ingin berdampak bersama.
@@ -364,7 +452,7 @@ function JoinCta() {
             Ajukan kerja sama
             <ArrowRight className="size-[18px]" aria-hidden />
           </Link>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

@@ -24,6 +24,7 @@
 @theme inline {
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-serif: var(--font-serif-accent), ui-serif, Georgia, serif;
 }
 
 html {
@@ -40,9 +41,79 @@ body {
   outline: 2px solid var(--color-brand);
   outline-offset: 3px;
 }
+/* Elemen yang hanya menerima fokus lewat skrip (misalnya judul kartu yang baru terbuka) tidak perlu cincin fokus. */
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+/* Gerak masuk hero saat halaman dibuka */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(8px);
+  }
+}
+.rise {
+  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0ms) both;
+}
+
+/* Gerak masuk saat di-scroll (dipasang oleh komponen Reveal) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(6px);
+  transition:
+    opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0ms),
+    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0ms),
+    filter 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0ms);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+/* Bar statistik tumbuh dari kiri setelah kartunya muncul */
+.grow-x {
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--d, 0ms) + 350ms);
+}
+.reveal:not(.is-in) .grow-x {
+  transform: scaleX(0);
+}
+
+/* Pita kartu Look, Learn, Lead yang berjalan ke kiri */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 48s linear infinite;
+}
+.marquee-mask:hover .marquee-track {
+  animation-play-state: paused;
+}
+.marquee-mask {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .rise,
+  .marquee-track {
+    animation: none;
+  }
+  .marquee-mask {
+    overflow-x: auto;
+  }
+  .reveal,
+  .grow-x {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
   }
 }

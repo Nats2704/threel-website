@@ -27,7 +27,7 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-6 px-4 sm:px-6 lg:h-20 lg:px-8">
         <Link href="/" aria-label="ThreeL Community, kembali ke beranda" className="flex items-center gap-3 text-forest">
-          <LogoMark size={38} />
+          <LogoMark size={52} />
           <span className="flex flex-col leading-tight">
             <span className="text-lg font-extrabold tracking-tight">ThreeL</span>
             <span className="text-[11px] font-bold tracking-[0.16em] text-muted">COMMUNITY</span>

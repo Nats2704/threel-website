@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+import { IBM_Plex_Mono, Instrument_Serif, Plus_Jakarta_Sans } from 'next/font/google';
 import { Navbar } from '@/components/site/navbar';
 import { Footer } from '@/components/site/footer';
 import './globals.css';
@@ -11,6 +11,13 @@ const plexMono = IBM_Plex_Mono({
   variable: '--font-plex-mono',
   display: 'swap',
 });
+const serif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-serif-accent',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: { default: 'ThreeL Community — Look, Learn, Lead', template: '%s — ThreeL Community' },
@@ -20,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${jakarta.variable} ${plexMono.variable}`}>
+    <html lang="id" className={`${jakarta.variable} ${plexMono.variable} ${serif.variable}`}>
       <body className="flex min-h-dvh flex-col font-sans">
         <a
           href="#konten"

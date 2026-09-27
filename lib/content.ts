@@ -167,9 +167,27 @@ export const impactMetrics = [
 ];
 
 export const lookLearnLead = [
-  { no: '01', title: 'Look', desc: 'Membaca masalah langsung dari lapangan dan data.' },
-  { no: '02', title: 'Learn', desc: 'Membekali pemuda dengan ilmu, keterampilan, dan teknologi.' },
-  { no: '03', title: 'Lead', desc: 'Memimpin aksi yang terukur dan berkelanjutan bagi masyarakat prasejahtera.' },
+  {
+    no: '01',
+    title: 'Look',
+    desc: 'Membaca masalah langsung dari lapangan dan data.',
+    detail: 'Turun ke lapangan dan membaca data untuk memahami akar masalah sebelum bergerak.',
+    tag: 'Riset & survei lapangan',
+  },
+  {
+    no: '02',
+    title: 'Learn',
+    desc: 'Membekali pemuda dengan ilmu, keterampilan, dan teknologi.',
+    detail: 'Membekali pemuda dengan ilmu, keterampilan, dan teknologi yang dibutuhkan untuk menjawab masalah itu.',
+    tag: 'Kelas & mentoring',
+  },
+  {
+    no: '03',
+    title: 'Lead',
+    desc: 'Memimpin aksi yang terukur dan berkelanjutan bagi masyarakat prasejahtera.',
+    detail: 'Memimpin aksi nyata yang terukur dan berkelanjutan bersama masyarakat prasejahtera.',
+    tag: 'Aksi & evaluasi dampak',
+  },
 ];
 
 export const missions = [

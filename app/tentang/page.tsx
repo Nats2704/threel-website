@@ -41,7 +41,7 @@ export default function TentangPage() {
               pendidikan, teknologi, dan pemberdayaan sosial.
             </p>
             <span className="mt-auto font-mono text-[13px] font-semibold text-sage-muted">
-              #GenerateGreatProblemSolver
+              #ShapingChangemakers
             </span>
           </div>
           <div className="flex flex-col gap-5 rounded-3xl border border-line bg-white p-8 sm:p-12">

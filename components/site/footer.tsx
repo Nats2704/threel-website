@@ -21,14 +21,14 @@ export function Footer() {
       <div className="mx-auto grid max-w-[1200px] gap-10 px-4 pb-8 pt-16 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.3fr] lg:px-8">
         <div className="flex flex-col gap-4">
           <Link href="/" className="flex w-fit items-center gap-3" aria-label="ThreeL Community, beranda">
-            <LogoMark tone="bright" />
+            <LogoMark size={44} />
             <span className="text-lg font-extrabold tracking-tight">ThreeL Community</span>
           </Link>
           <p className="max-w-sm text-sm leading-relaxed text-sage">
             Organisasi pemuda nirlaba yang bergerak di pengentasan kemiskinan, pendidikan, teknologi, dan pemberdayaan
             sosial.
           </p>
-          <span className="font-mono text-[13px] font-semibold text-gold">#GenerateGreatProblemSolver</span>
+          <span className="font-mono text-[13px] font-semibold text-gold">#ShapingChangemakers</span>
         </div>
 
         <nav aria-label="Tautan footer" className="flex flex-col gap-3">
