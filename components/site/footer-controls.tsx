@@ -24,7 +24,9 @@ export function NewsletterForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-2">
-      <div className="flex h-[60px] w-full max-w-[306px] items-center rounded-xl border border-line bg-white pl-5 pr-1.5 transition focus-within:border-brand">
+      {/* gap-2: jarak tetap antara kotak teks dan tombol, supaya email panjang yang terpotong
+          di tepi input tidak pernah terlihat menabrak/bersembunyi di balik tombol. */}
+      <div className="flex h-[60px] w-full max-w-[360px] items-center gap-2 rounded-xl border border-line bg-white pl-4 pr-1.5 transition focus-within:border-brand">
         <label htmlFor="footer-email" className="sr-only">
           {t('Alamat email', 'Email address')}
         </label>
@@ -35,12 +37,12 @@ export function NewsletterForm() {
           required
           autoComplete="email"
           placeholder={t('Masukkan email kamu', 'Enter your email')}
-          className="min-w-0 flex-1 bg-transparent text-lg text-ink outline-none placeholder:text-slate-400"
+          className="min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-slate-400"
         />
         <button
           type="submit"
           aria-label={t('Kirim', 'Subscribe')}
-          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-forest text-white transition hover:bg-brand"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-forest text-white transition hover:bg-brand"
         >
           {sent ? <Check className="size-5" aria-hidden /> : <Send className="size-5 -translate-x-px translate-y-px" aria-hidden />}
         </button>
