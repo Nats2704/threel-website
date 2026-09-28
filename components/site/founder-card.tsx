@@ -1,12 +1,16 @@
+'use client';
+
 import Image from 'next/image';
 import { founder } from '@/lib/content';
+import { useLang } from '@/lib/i18n';
 
 // Garis kisi tipis yang memudar di ujung, membingkai foto dan kutipan founder.
 const hLine = 'pointer-events-none absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-[#CFDAD4] to-transparent';
 const vLine = 'pointer-events-none absolute -inset-y-12 w-px bg-gradient-to-b from-transparent via-[#CFDAD4] to-transparent';
 
 export function FounderCard() {
-  const [before, after] = founder.quote.split(founder.highlight);
+  const { t } = useLang();
+  const [before, after] = t(founder.quote).split(founder.highlight);
 
   return (
     <figure className="relative m-0 py-12">
@@ -20,7 +24,7 @@ export function FounderCard() {
           {founder.photo ? (
             <Image
               src={founder.photo}
-              alt={`Foto ${founder.name}, ${founder.role}`}
+              alt={`${t('Foto', 'Photo of')} ${founder.name}, ${founder.role}`}
               fill
               sizes="192px"
               className="object-cover [mask-image:radial-gradient(circle,black_60%,transparent_100%)]"

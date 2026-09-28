@@ -6,6 +6,7 @@ import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { ArrowRight, Cpu, GraduationCap, Sprout, Users, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { missions } from '@/lib/content';
+import { useLang } from '@/lib/i18n';
 import { ScrollDrift } from '@/components/ui/scroll-motion';
 
 // Ikon misi, urut sesuai missions. Ikon menumpang di cincin pada sudut 45°, 135°, 225°, 315°
@@ -45,6 +46,7 @@ type Props = { active: number | null; toggle: (i: number) => void };
 
 /** Cincin bergradasi dengan ikon misi yang ikut berputar, dan logo ThreeL di tengah. Putaran berhenti saat kursor di atasnya. */
 function OrbitRing({ active, toggle, className }: Props & { className?: string }) {
+  const { t } = useLang();
   // Id unik: cincin dirender dua kali (desktop & HP), id gradien kembar bisa merujuk ke salinan yang tersembunyi.
   const gradId = `orbit-line-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   return (
@@ -73,7 +75,7 @@ function OrbitRing({ active, toggle, className }: Props & { className?: string }
       />
       <div className="absolute inset-0 m-auto flex size-[39%] items-center justify-center rounded-full border border-mint-line bg-white shadow-[0_20px_40px_-20px_rgba(11,59,46,0.35)]">
         {/* Logo sudah terpotong rapat, jadi cukup atur tingginya; lebar mengikuti rasio 355:480. */}
-        <Image src="/images/logo-threel-mark.webp" alt="Logo ThreeL" width={355} height={480} className="h-[62%] w-auto" />
+        <Image src="/images/logo-threel-mark.webp" alt={t('Logo ThreeL', 'ThreeL logo')} width={355} height={480} className="h-[62%] w-auto" />
       </div>
 
       {/* Lapisan ikon berputar bersama titik di SVG; tiap ikon berputar balik agar tetap tegak. */}
@@ -84,14 +86,14 @@ function OrbitRing({ active, toggle, className }: Props & { className?: string }
           const rad = (ICON_DEG[i] * Math.PI) / 180;
           return (
             <span
-              key={m.label}
+              key={m.label.id}
               className="absolute size-[17%] -translate-x-1/2 -translate-y-1/2"
               style={{ left: `${50 + R_PCT * Math.cos(rad)}%`, top: `${50 + R_PCT * Math.sin(rad)}%` }}
             >
               <span className="orbit-counter block size-full">
                 <motion.button
                   type="button"
-                  aria-label={m.label}
+                  aria-label={t(m.label)}
                   aria-pressed={on}
                   onClick={() => toggle(i)}
                   initial={false}
@@ -116,12 +118,13 @@ function OrbitRing({ active, toggle, className }: Props & { className?: string }
 
 /** Desktop: empat kartu foto; yang dipilih menggelap dan menampilkan penjelasan. */
 function MissionCards({ active, toggle }: Props) {
+  const { t } = useLang();
   return (
     <ul className="grid grid-cols-2 gap-5">
       {missions.map((m, i) => {
         const on = active === i;
         return (
-          <li key={m.label}>
+          <li key={m.label.id}>
             <motion.button
               type="button"
               aria-expanded={on}
@@ -145,7 +148,7 @@ function MissionCards({ active, toggle }: Props) {
               />
 
               <span className="absolute inset-x-0 bottom-0 flex flex-col p-4">
-                <span className="text-lg font-extrabold leading-snug text-white">{m.label}</span>
+                <span className="text-lg font-extrabold leading-snug text-white">{t(m.label)}</span>
                 <AnimatePresence initial={false}>
                   {on ? (
                     <motion.span
@@ -156,7 +159,7 @@ function MissionCards({ active, toggle }: Props) {
                       transition={{ duration: 0.4, ease }}
                       className="block overflow-hidden text-[14px] leading-relaxed text-white/90"
                     >
-                      <span className="block pt-3">{m.text}</span>
+                      <span className="block pt-3">{t(m.text)}</span>
                     </motion.span>
                   ) : null}
                 </AnimatePresence>
@@ -171,12 +174,13 @@ function MissionCards({ active, toggle }: Props) {
 
 /** HP: daftar bernomor selebar layar dengan foto sebagai latar; baris yang ditekan melebar memperlihatkan foto. */
 function MissionList({ active, toggle }: Props) {
+  const { t } = useLang();
   return (
     <ul className="-mx-4 sm:-mx-6">
       {missions.map((m, i) => {
         const on = active === i;
         return (
-          <li key={m.label} className="border-b border-white/15 first:border-t">
+          <li key={m.label.id} className="border-b border-white/15 first:border-t">
             <button type="button" aria-expanded={on} onClick={() => toggle(i)} className="relative block w-full overflow-hidden text-left">
               <Image src={m.image} alt="" fill sizes="100vw" className="object-cover" />
               <motion.span
@@ -194,7 +198,7 @@ function MissionList({ active, toggle }: Props) {
                 <span className="flex items-center gap-4">
                   <span className="w-6 shrink-0 font-mono text-xs font-semibold text-white/60">{String(i + 1).padStart(2, '0')}</span>
                   <span className="flex-1 text-[22px] font-extrabold uppercase leading-tight tracking-tight text-white sm:text-3xl">
-                    {m.label}
+                    {t(m.label)}
                   </span>
                   <motion.span
                     initial={false}
@@ -219,7 +223,7 @@ function MissionList({ active, toggle }: Props) {
                       transition={{ duration: 0.45, ease }}
                       className="block overflow-hidden pl-10 pr-14 text-[15px] leading-relaxed text-white/90"
                     >
-                      {m.text}
+                      {t(m.text)}
                     </motion.span>
                   ) : null}
                 </AnimatePresence>

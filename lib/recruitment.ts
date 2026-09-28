@@ -7,8 +7,8 @@
 export type RecruitmentStatus = 'open' | 'waitlist';
 
 export const recruitment: Record<'bod' | 'associate' | 'member', RecruitmentStatus> = {
-  bod: 'open',
-  associate: 'waitlist',
+  bod: 'waitlist',
+  associate: 'open',
   member: 'waitlist',
 };
 

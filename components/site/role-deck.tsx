@@ -9,10 +9,7 @@ import {
   Check,
   Clock,
   FileText,
-  Flag,
   HeartHandshake,
-  Layers,
-  MousePointerClick,
   Users,
   X,
   type LucideIcon,
@@ -20,15 +17,17 @@ import {
 import { cn } from '@/lib/cn';
 import { divisionGroups } from '@/lib/content';
 import type { RecruitmentStatus } from '@/lib/recruitment';
+import { LeadershipIcon, TeamHandsIcon } from '@/components/ui/icons';
 import { StatusBadge } from '@/components/ui/status-badge';
 
 type RoleId = 'bod' | 'associate' | 'member';
 
 type Role = {
   id: RoleId;
-  opsi: string;
+  no: string;
+  tag: string;
   status: RecruitmentStatus | 'rolling';
-  icon: LucideIcon;
+  icon: LucideIcon | typeof LeadershipIcon | typeof TeamHandsIcon;
   title: string;
   subtitle: string;
   desc: string;
@@ -49,25 +48,26 @@ type Role = {
   };
 };
 
-const waitlistCta = (s: RecruitmentStatus, open: string) => (s === 'waitlist' ? 'Masuk daftar tunggu' : open);
+const waitlistCta = (s: RecruitmentStatus, open: string) => (s === 'waitlist' ? 'Join the waitlist' : open);
 
 function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus, member: RecruitmentStatus): Role[] {
   return [
     {
       id: 'bod',
-      opsi: 'OPSI 01 · C-LEVEL',
+      no: '01',
+      tag: 'C-Level',
       status: bod,
-      icon: Flag,
+      icon: LeadershipIcon,
       title: 'Board of Director',
-      subtitle: 'Pimpinan eksekutif strategis',
-      desc: 'Untuk pemimpin yang siap memegang arah divisi, membangun tim, dan bertanggung jawab atas dampak program.',
+      subtitle: 'Strategic Executive Leadership',
+      desc: 'The highest leadership body, responsible for strategic direction, key decision making, and oversight of all operations so the organization stays aligned with the impact, vision, and mission it aims to achieve.',
       facts: [
-        { icon: Users, text: '5 posisi: CMO, CHRO, CFO, COO, CIDO' },
-        { icon: Clock, text: 'Minimal 15–20 jam per minggu' },
-        { icon: FileText, text: 'CV, portofolio kepemimpinan, 2 esai' },
+        { icon: Users, text: '5 positions (CMO, CHRO, CFO, COO, CIDO)' },
+        { icon: Clock, text: 'At least 15–20 hours per week' },
+        { icon: FileText, text: 'CV, leadership portfolio, and 2 essays' },
       ],
       href: '/daftar/bod',
-      cta: waitlistCta(bod, 'Lamar sebagai BOD'),
+      cta: waitlistCta(bod, 'Apply as BoD'),
       theme: {
         surface: 'bg-forest border-white/10',
         title: 'text-white',
@@ -82,19 +82,20 @@ function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus, member
     },
     {
       id: 'associate',
-      opsi: 'OPSI 02 · DIVISI',
+      no: '02',
+      tag: 'Division',
       status: associate,
-      icon: Layers,
+      icon: TeamHandsIcon,
       title: 'Associate',
-      subtitle: 'Manager & Staff Divisi',
-      desc: 'Untuk pelaksana program dan manajer teknis yang ingin berkontribusi sesuai keahlian.',
+      subtitle: 'Division Managers & Staff',
+      desc: 'For program executors and technical managers who want to contribute through their expertise.',
       chips: Object.keys(divisionGroups),
       facts: [
-        { icon: Clock, text: '8–12 jam per minggu' },
-        { icon: FileText, text: 'CV, portofolio teknis, studi kasus' },
+        { icon: Clock, text: '8–12 hours per week' },
+        { icon: FileText, text: 'CV, technical portfolio, and a case study' },
       ],
       href: '/daftar/associate',
-      cta: waitlistCta(associate, 'Lamar sebagai Associate'),
+      cta: waitlistCta(associate, 'Apply as Associate'),
       theme: {
         surface: 'bg-white border-line',
         title: 'text-forest',
@@ -109,18 +110,19 @@ function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus, member
     },
     {
       id: 'member',
-      opsi: 'OPSI 03 · RELAWAN',
+      no: '03',
+      tag: 'Volunteer',
       status: member,
       icon: HeartHandshake,
-      title: 'Member / Relawan',
+      title: 'Member / Volunteer',
       subtitle: 'ThreeLearnian',
-      desc: 'Ikut aksi sosial kapan pun kamu bisa: mengajar, donor darah, atau berkebun di kota.',
+      desc: 'Join social action whenever you can, from teaching and blood drives to urban farming.',
       facts: [
-        { icon: Clock, text: 'Waktu fleksibel, per kegiatan' },
-        { icon: Check, text: 'Tanpa CV, tanpa esai, satu halaman' },
+        { icon: Clock, text: 'Flexible time, per activity' },
+        { icon: Check, text: 'Selection process through FGD only' },
       ],
       href: '/daftar/member',
-      cta: waitlistCta(member, 'Gabung jadi ThreeLearnian'),
+      cta: waitlistCta(member, 'Join as a ThreeLearnian'),
       theme: {
         surface: 'bg-mint border-mint-line',
         title: 'text-forest',
@@ -144,6 +146,16 @@ const SKEW = -8;
 const EASE = [0.22, 1, 0.36, 1] as const;
 // Isi kartu di rak memudar masuk setelah kartu selesai kembali ke tempatnya.
 const settleIn = { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.2, duration: 0.35, ease: EASE } };
+
+/** Nomor opsi dalam lencana kecil, diikuti nama jalurnya. */
+function OptionTag({ role, className }: { role: Role; className?: string }) {
+  return (
+    <span className={cn('flex items-center gap-2 whitespace-nowrap font-mono font-semibold uppercase tracking-[0.12em]', role.theme.accent, className)}>
+      <span className="rounded-md border border-current px-1.5 py-0.5 tracking-normal">{role.no}</span>
+      {role.tag}
+    </span>
+  );
+}
 
 function RackCard({
   role,
@@ -182,10 +194,7 @@ function RackCard({
       )}
     >
       <motion.div layout="position" {...fade} className="flex w-full items-center justify-between gap-3">
-        <span className={cn('whitespace-nowrap font-mono text-[11px] font-semibold tracking-[0.12em]', t.accent)}>
-          {role.opsi.split(' · ')[0]}
-          <span className="hidden sm:inline"> · {role.opsi.split(' · ')[1]}</span>
-        </span>
+        <OptionTag role={role} className="text-[11px]" />
         <StatusBadge status={role.status} size="sm" />
       </motion.div>
       <motion.div layout="position" {...fade} className="flex items-center gap-3">
@@ -197,7 +206,7 @@ function RackCard({
       <motion.div layout="position" {...fade} className="flex w-full items-center justify-between gap-3 text-sm sm:text-[15px]">
         <span className={t.muted}>{role.subtitle}</span>
         <span className={cn('flex items-center gap-1 font-bold', t.accent)}>
-          Buka
+          Open
           <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
         </span>
       </motion.div>
@@ -233,15 +242,13 @@ function OpenCard({ role, onClose, ref }: { role: Role; onClose: () => void; ref
     >
       <motion.div layout="position" {...reveal(-2)} className="flex flex-col gap-5">
         <div className="flex items-center justify-between gap-3">
-          <span className={cn('whitespace-nowrap font-mono text-xs font-semibold tracking-[0.12em]', t.accent)}>
-            {role.opsi}
-          </span>
+          <OptionTag role={role} className="text-xs" />
           <div className="flex items-center gap-2">
             <StatusBadge status={role.status} />
             <button
               type="button"
               onClick={onClose}
-              aria-label={`Kembalikan kartu ${role.title} ke rak`}
+              aria-label={`Return the ${role.title} card to the rack`}
               className={cn('flex size-9 items-center justify-center rounded-full transition', t.close)}
             >
               <X className="size-[18px]" aria-hidden />
@@ -340,7 +347,7 @@ export function RoleDeck({
       <LayoutGroup>
         <div className="flex flex-col items-center lg:flex-row lg:items-center lg:justify-center">
           <motion.div layout="position" className="flex flex-col items-center gap-8">
-            <div aria-label="Rak kartu peran" role="group" className="grid place-items-start pb-6 pt-10 [grid-template-areas:'stack']">
+            <div aria-label="Role cards" role="group" className="grid place-items-start pb-6 pt-10 [grid-template-areas:'stack']">
               {roles.map((role, i) =>
                 role.id === openId ? (
                   // Penahan ruang tak terlihat supaya tinggi rak tidak berubah saat kartu diambil.
@@ -360,10 +367,6 @@ export function RoleDeck({
                 ),
               )}
             </div>
-            <p className="flex max-w-md items-start justify-center gap-2 text-center text-sm leading-relaxed text-muted sm:text-[15px]">
-              <MousePointerClick className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />
-              Ketuk kartu untuk membukanya. Kartu yang terbuka kembali ke rak saat kamu memilih yang lain.
-            </p>
           </motion.div>
 
           <div

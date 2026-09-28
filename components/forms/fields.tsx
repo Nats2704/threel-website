@@ -2,6 +2,7 @@
 
 import { CheckCircle2, Upload } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { useLang } from '@/lib/i18n';
 import { formatFileSize } from '@/lib/validation';
 
 /** Gaya kontrol per jenis formulir: formal (BOD), default (Associate/Mitra), friendly (Member). */
@@ -144,6 +145,7 @@ export function TextAreaField({
   ...base
 }: BaseProps & { value: string; onChange: (v: string) => void; placeholder?: string; wordCount?: number }) {
   const { id, hint, error, tone = 'default' } = base;
+  const { t } = useLang();
   return (
     <Field {...base}>
       <textarea
@@ -159,7 +161,7 @@ export function TextAreaField({
       />
       {wordCount != null ? (
         <span className="self-end font-mono text-xs text-slate-500" aria-live="polite">
-          {wordCount} kata
+          {wordCount} {t('kata', wordCount === 1 ? 'word' : 'words')}
         </span>
       ) : null}
     </Field>
@@ -174,6 +176,7 @@ export function FileField({
   ...base
 }: BaseProps & { file: File | null; onChange: (f: File | null) => void; accept: string; note: string }) {
   const { id, hint, error, tone = 'default' } = base;
+  const { t } = useLang();
   return (
     <Field {...base}>
       <label
@@ -194,9 +197,9 @@ export function FileField({
         </span>
         <span className="flex min-w-0 flex-col gap-1">
           <span className={cn('truncate text-[15px] font-bold', file ? 'text-brand' : 'text-ink')}>
-            {file ? file.name : 'Pilih berkas'}
+            {file ? file.name : t('Pilih berkas', 'Choose a file')}
           </span>
-          <span className="text-[13px] text-muted">{file ? `${formatFileSize(file.size)} · klik untuk mengganti` : note}</span>
+          <span className="text-[13px] text-muted">{file ? `${formatFileSize(file.size)}, ${t('klik untuk mengganti', 'click to replace')}` : note}</span>
         </span>
         <input
           id={id}
@@ -259,10 +262,14 @@ export function ConsentCheckbox({
 }
 
 export function ErrorSummary({ count, className }: { count: number; className?: string }) {
+  const { t } = useLang();
   if (count === 0) return null;
   return (
     <p role="alert" className={cn('text-sm font-bold text-danger', className)}>
-      Masih ada {count} isian yang perlu diperbaiki.
+      {t(
+        `Masih ada ${count} isian yang perlu diperbaiki.`,
+        `${count} ${count === 1 ? 'field needs' : 'fields need'} your attention.`,
+      )}
     </p>
   );
 }

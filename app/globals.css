@@ -22,13 +22,23 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  /* Optima tersedia bawaan di macOS/iOS. Perangkat tanpa Optima memakai sans humanis terdekat
+     (URW Classico, lalu Candara di Windows), bukan sans geometris. */
+  --font-sans: Optima, 'Optima nova', 'URW Classico', Candara, 'Segoe UI', 'Noto Sans', sans-serif;
+  /* Nama token tetap `mono` supaya kelas `font-mono` yang sudah ada ikut berganti ke Rokkitt. */
+  --font-mono: var(--font-label), 'Rockwell', Georgia, serif;
   --font-serif: var(--font-serif-accent), ui-serif, Georgia, serif;
+  --font-hand: var(--font-hand-script), 'Segoe Print', cursive;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Rokkitt bertinggi-x lebih kecil dari font label sebelumnya; disamakan agar label tetap terbaca
+   tanpa mengubah ukuran teks di setiap komponen. */
+.font-mono {
+  font-size-adjust: 0.5;
 }
 
 body {
@@ -99,6 +109,17 @@ body {
 .value-marquee:hover .value-track,
 .value-marquee:focus-within .value-track {
   animation-play-state: paused;
+}
+/* Pita foto hero Bermitra: berjalan sendiri ke kiri, tidak bisa disentuh atau dijeda. */
+.partner-track {
+  animation: value-scroll 60s linear infinite;
+}
+/* Kartu memudar di bagian atas supaya teks dan tombol di atasnya tetap terbaca, dan di tepi kiri-kanan layar. */
+.partner-fade {
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.partner-card-fade {
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.35) 18%, #000 42%);
 }
 .value-card {
   transition:
@@ -254,6 +275,7 @@ body {
   .float-soft,
   .dash-flow,
   .value-track,
+  .partner-track,
   .chief-blob,
   .orbit-spin,
   .orbit-spin-layer,

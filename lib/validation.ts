@@ -23,6 +23,8 @@ export type Rule = {
   differentMsg?: string;
 };
 
+import type { Lang } from './i18n';
+
 export type Schema<T> = { [K in keyof T]?: Rule };
 export type Errors<T> = { [K in keyof T]?: string };
 
@@ -67,17 +69,50 @@ function isFilled(v: unknown): boolean {
   return v != null && String(v).trim() !== '';
 }
 
-function checkFile(v: unknown, rule: FileRule): string {
+/** Pesan bawaan per bahasa. Pesan khusus (requiredMsg, dll.) dikirim oleh tiap formulir. */
+const messages = {
+  id: {
+    fileMissing: 'Unggah berkas terlebih dahulu.',
+    fileType: (t: string) => `Format berkas harus ${t}.`,
+    fileSize: (mb: number) => `Ukuran berkas maksimal ${mb} MB.`,
+    checked: 'Wajib dicentang.',
+    required: 'Wajib diisi.',
+    email: 'Format email belum benar, contoh: nama@domain.com.',
+    phone: 'Gunakan nomor HP Indonesia, contoh: 0812 3456 7890 atau +62 812 3456 7890.',
+    urlHost: (h: string) => `Gunakan tautan ${h} yang lengkap (diawali https://).`,
+    url: 'Masukkan tautan lengkap yang diawali https://.',
+    minWords: (min: number, now: number) => `Minimal ${min} kata (saat ini ${now} kata).`,
+    range: 'Nilai di luar rentang yang diizinkan.',
+    different: 'Pilihan harus berbeda.',
+  },
+  en: {
+    fileMissing: 'Please upload a file first.',
+    fileType: (t: string) => `The file must be ${t}.`,
+    fileSize: (mb: number) => `The file must be ${mb} MB or smaller.`,
+    checked: 'Please tick this box.',
+    required: 'This field is required.',
+    email: 'Please enter a valid email, for example name@domain.com.',
+    phone: 'Please use an Indonesian mobile number, for example 0812 3456 7890 or +62 812 3456 7890.',
+    urlHost: (h: string) => `Please enter a full ${h} link (starting with https://).`,
+    url: 'Please enter a full link starting with https://.',
+    minWords: (min: number, now: number) => `At least ${min} words (currently ${now}).`,
+    range: 'This value is outside the allowed range.',
+    different: 'Please choose a different option.',
+  },
+};
+
+function checkFile(v: unknown, rule: FileRule, m: (typeof messages)[Lang]): string {
   const isFile = typeof File !== 'undefined' && v instanceof File;
-  if (!isFile) return rule.required ? 'Unggah berkas terlebih dahulu.' : '';
+  if (!isFile) return rule.required ? m.fileMissing : '';
   const file = v as File;
   const ext = (file.name.split('.').pop() ?? '').toLowerCase();
-  if (!rule.types.includes(ext)) return `Format berkas harus ${rule.types.join(' / ').toUpperCase()}.`;
-  if (file.size > rule.maxMB * 1024 * 1024) return `Ukuran berkas maksimal ${rule.maxMB} MB.`;
+  if (!rule.types.includes(ext)) return m.fileType(rule.types.join(' / ').toUpperCase());
+  if (file.size > rule.maxMB * 1024 * 1024) return m.fileSize(rule.maxMB);
   return '';
 }
 
-export function validate<T extends Record<string, unknown>>(values: T, schema: Schema<T>): Errors<T> {
+export function validate<T extends Record<string, unknown>>(values: T, schema: Schema<T>, lang: Lang = 'id'): Errors<T> {
+  const m = messages[lang];
   const errors: Errors<T> = {};
   (Object.keys(schema) as Array<keyof T>).forEach((key) => {
     const r = schema[key];
@@ -85,30 +120,28 @@ export function validate<T extends Record<string, unknown>>(values: T, schema: S
     const v = values[key];
     let msg = '';
     if (r.file) {
-      msg = checkFile(v, r.file);
+      msg = checkFile(v, r.file, m);
     } else if (r.checked) {
-      if (v !== true) msg = r.checkedMsg ?? 'Wajib dicentang.';
+      if (v !== true) msg = r.checkedMsg ?? m.checked;
     } else if (!isFilled(v)) {
-      if (r.required) msg = r.requiredMsg ?? 'Wajib diisi.';
+      if (r.required) msg = r.requiredMsg ?? m.required;
     } else {
       const s = String(v);
       if (r.email && !isValidEmail(s)) {
-        msg = 'Format email belum benar, contoh: nama@domain.com.';
+        msg = m.email;
       } else if (r.phone && !isValidPhoneID(s)) {
-        msg = 'Gunakan nomor HP Indonesia, contoh: 0812 3456 7890 atau +62 812 3456 7890.';
+        msg = m.phone;
       } else if (r.url && !isValidUrl(s, r.host)) {
-        msg = r.host
-          ? `Gunakan tautan ${r.host} yang lengkap (diawali https://).`
-          : 'Masukkan tautan lengkap yang diawali https://.';
+        msg = r.host ? m.urlHost(r.host) : m.url;
       } else if (r.minWords && countWords(s) < r.minWords) {
-        msg = `Minimal ${r.minWords} kata (saat ini ${countWords(s)} kata).`;
+        msg = m.minWords(r.minWords, countWords(s));
       } else if (
         (r.min != null || r.max != null) &&
         (Number.isNaN(Number(s)) || (r.min != null && Number(s) < r.min) || (r.max != null && Number(s) > r.max))
       ) {
-        msg = r.rangeMsg ?? 'Nilai di luar rentang yang diizinkan.';
+        msg = r.rangeMsg ?? m.range;
       } else if (r.differentFrom && v === values[r.differentFrom as keyof T]) {
-        msg = r.differentMsg ?? 'Pilihan harus berbeda.';
+        msg = r.differentMsg ?? m.different;
       }
     }
     if (msg) errors[key] = msg;

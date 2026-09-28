@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   ArrowRight,
   ChevronRight,
   Handshake,
+  HelpCircle,
   LayoutGrid,
   Menu,
   Newspaper,
@@ -16,19 +17,23 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { useLang, type Bi } from '@/lib/i18n';
+import { LangSwitch, LangToggle } from './lang-switch';
 import { LogoMark } from './logo';
 
-const links: { href: string; label: string; icon: LucideIcon }[] = [
-  { href: '/tentang', label: 'Tentang Kami', icon: Sprout },
-  { href: '/program', label: 'Program', icon: LayoutGrid },
-  { href: '/bermitra', label: 'Bermitra', icon: Handshake },
-  { href: '/kabar', label: 'Kabar & Dokumentasi', icon: Newspaper },
+const links: { href: string; label: Bi; icon: LucideIcon }[] = [
+  { href: '/tentang', label: { id: 'Tentang Kami', en: 'About Us' }, icon: Sprout },
+  { href: '/program', label: { id: 'Program', en: 'Programs' }, icon: LayoutGrid },
+  { href: '/bermitra', label: { id: 'Bermitra', en: 'Partner' }, icon: Handshake },
+  { href: '/kabar', label: { id: 'Kabar & Dokumentasi', en: 'News & Stories' }, icon: Newspaper },
+  { href: '/faq', label: { id: 'FAQ', en: 'FAQ' }, icon: HelpCircle },
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function Navbar() {
   const pathname = usePathname();
+  const { lang, t } = useLang();
   const [open, setOpen] = useState(false);
 
   // Tutup menu mobile setiap kali pindah halaman.
@@ -47,67 +52,107 @@ export function Navbar() {
   const [lamp, setLamp] = useState<string | null>(null);
   useEffect(() => setLamp(links.find((l) => isActive(l.href))?.href ?? null), [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Posisi lampu diukur langsung dari tautan tujuan. Hanya sumbu x dan lebar yang
+  // dianimasikan, jadi lampu selalu bergeser mendatar, tidak ikut terpengaruh scroll.
+  const navRef = useRef<HTMLElement>(null);
+  const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const [box, setBox] = useState<{ x: number; width: number } | null>(null);
+  const [placed, setPlaced] = useState(false);
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = lamp ? linkRefs.current[lamp] : null;
+      if (el) setBox({ x: el.offsetLeft, width: el.offsetWidth });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (navRef.current) ro.observe(navRef.current);
+    return () => ro.disconnect();
+    // Ukur ulang saat bahasa berganti, karena lebar label ikut berubah.
+  }, [lamp, lang]);
+
+  // Kemunculan pertama langsung di tempat, tanpa meluncur dari kiri.
+  useEffect(() => {
+    if (box && !placed) requestAnimationFrame(() => setPlaced(true));
+  }, [box, placed]);
+
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-6 px-4 sm:px-6 lg:h-20 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-3 px-4 sm:px-6 lg:h-20 lg:px-8">
           <Link
             href="/"
-            aria-label="ThreeL Community, kembali ke beranda"
+            aria-label={t('ThreeL Community, kembali ke beranda', 'ThreeL Community, back to home')}
             className="flex items-center gap-3 text-forest"
           >
             <LogoMark size={52} />
-            <span className="flex flex-col leading-tight">
+            {/* Layar sangat sempit: cukup logo, supaya tombol bahasa, Daftar, dan menu tetap muat. */}
+            <span className="hidden flex-col leading-tight min-[370px]:flex">
               <span className="text-lg font-extrabold tracking-tight">ThreeL</span>
               <span className="text-[11px] font-bold tracking-[0.16em] text-muted">COMMUNITY</span>
             </span>
           </Link>
 
-          <nav aria-label="Navigasi utama" className="hidden h-full items-center gap-2 lg:flex">
+          <nav
+            ref={navRef}
+            aria-label={t('Navigasi utama', 'Main navigation')}
+            className="relative hidden h-full items-center gap-2 lg:flex"
+          >
+            {/* Satu lampu untuk semua tautan, bergeser mendatar ke tautan yang dipilih */}
+            {box ? (
+              <motion.span
+                aria-hidden
+                initial={false}
+                animate={{ x: box.x, width: box.width, opacity: lamp ? 1 : 0 }}
+                transition={
+                  placed
+                    ? {
+                        x: { duration: 0.55, ease: EASE },
+                        width: { duration: 0.55, ease: EASE },
+                        opacity: { duration: 0.25 },
+                      }
+                    : { duration: 0 }
+                }
+                className="pointer-events-none absolute left-0 top-0 bottom-3"
+              >
+                {/* Kap lampu, selebar pangkal berkas cahaya */}
+                <span className="absolute left-[28%] right-[28%] top-0 h-1 rounded-b-full bg-forest" />
+                {/* Berkas cahaya yang melebar ke bawah */}
+                <span className="absolute inset-x-0 top-1 bottom-0 bg-gradient-to-b from-brand/20 via-brand/[0.07] to-transparent [clip-path:polygon(28%_0,72%_0,100%_100%,0_100%)]" />
+                {/* Pantulan cahaya di bawah tulisan */}
+                <span className="absolute inset-x-[12%] bottom-0 h-3 rounded-full bg-brand/15 blur-md" />
+              </motion.span>
+            ) : null}
             {links.map((l) => {
               const lit = lamp === l.href;
               return (
                 <Link
                   key={l.href}
+                  ref={(el) => {
+                    linkRefs.current[l.href] = el;
+                  }}
                   href={l.href}
                   onClick={() => setLamp(l.href)}
                   aria-current={isActive(l.href) ? 'page' : undefined}
                   className={cn(
-                    'relative flex h-full items-center px-4 text-[15px] font-semibold transition-colors duration-300',
+                    'relative flex h-full items-center px-3 text-[15px] font-semibold xl:px-4 transition-colors duration-300',
                     lit ? 'text-forest' : 'text-slate-600 hover:text-brand',
                   )}
                 >
-                  {lit ? (
-                    <motion.span
-                      layoutId="nav-lamp"
-                      aria-hidden
-                      transition={{
-                        type: 'spring',
-                        visualDuration: 0.5,
-                        bounce: 0.18,
-                      }}
-                      className="pointer-events-none absolute inset-x-0 top-0 bottom-3 flex justify-center"
-                    >
-                      {/* Kap lampu */}
-                      <span className="absolute top-0 h-1 w-12 rounded-b-full bg-forest" />
-                      {/* Berkas cahaya yang melebar ke bawah */}
-                      <span className="absolute top-1 h-full w-[88%] bg-gradient-to-b from-brand/20 via-brand/[0.07] to-transparent [clip-path:polygon(28%_0,72%_0,100%_100%,0_100%)]" />
-                      {/* Pantulan cahaya di bawah tulisan */}
-                      <span className="absolute bottom-0 h-3 w-3/4 rounded-full bg-brand/15 blur-md" />
-                    </motion.span>
-                  ) : null}
-                  <span className="relative">{l.label}</span>
+                  <span className="relative whitespace-nowrap">{t(l.label)}</span>
                 </Link>
               );
             })}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
+            <LangSwitch className="hidden lg:flex" />
+            <LangToggle className="lg:hidden" />
             <Link
               href="/daftar"
-              className="flex h-11 items-center gap-2 rounded-full bg-brand px-5 text-[15px] font-bold text-white shadow-[0_0_0_4px_var(--color-mint-deep)] transition hover:bg-forest"
+              className="flex h-11 items-center gap-2 rounded-full bg-brand px-4 text-[15px] sm:px-5 font-bold text-white shadow-[0_0_0_4px_var(--color-mint-deep)] transition hover:bg-forest"
             >
-              Daftar
+              {t('Daftar', 'Join')}
               <ArrowRight className="hidden size-4 sm:block" aria-hidden />
             </Link>
             <button
@@ -115,7 +160,7 @@ export function Navbar() {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="menu-mobile"
-              aria-label={open ? 'Tutup menu' : 'Buka menu'}
+              aria-label={open ? t('Tutup menu', 'Close menu') : t('Buka menu', 'Open menu')}
               className={cn(
                 'relative flex size-11 items-center justify-center rounded-xl border text-forest transition-colors duration-300 lg:hidden',
                 open ? 'border-mint-line bg-mint' : 'border-line',
@@ -143,7 +188,7 @@ export function Navbar() {
             <motion.nav
               key="menu"
               id="menu-mobile"
-              aria-label="Navigasi mobile"
+              aria-label={t('Navigasi mobile', 'Mobile navigation')}
               initial={{ height: 0, opacity: 0 }}
               animate={{
                 height: 'auto',
@@ -210,7 +255,7 @@ export function Navbar() {
                         >
                           <Icon className="size-[18px]" aria-hidden />
                         </span>
-                        <span className="flex-1">{l.label}</span>
+                        <span className="flex-1">{t(l.label)}</span>
                         <ChevronRight
                           className={cn(
                             'size-4 transition-transform group-hover:translate-x-0.5',

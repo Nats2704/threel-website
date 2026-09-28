@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import { useLang } from '@/lib/i18n';
 import { validate, type Errors, type Schema } from '@/lib/validation';
 
 /**
@@ -13,12 +14,13 @@ export function useForm<T extends Record<string, unknown>>(
   schemaFor: (values: T) => Schema<T>,
   onValid?: (values: T) => void | Promise<void>,
 ) {
+  const { lang } = useLang();
   const [values, setValues] = useState<T>(initial);
   const [tried, setTried] = useState(false);
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const allErrors = validate(values, schemaFor(values));
+  const allErrors = validate(values, schemaFor(values), lang);
   const errors: Errors<T> = tried ? allErrors : {};
   const errorCount = Object.keys(errors).length;
 

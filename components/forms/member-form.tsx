@@ -24,40 +24,40 @@ type MemberValues = {
 const initial: MemberValues = { nama: '', usia: '', email: '', wa: '', kota: '', status: '', minat: [], pref: '' };
 
 const statusOptions = [
-  { value: 'pelajar', label: 'Pelajar SMA' },
-  { value: 'mahasiswa', label: 'Mahasiswa' },
-  { value: 'profesional', label: 'Profesional' },
-  { value: 'umum', label: 'Umum' },
+  { value: 'pelajar', label: 'High school' },
+  { value: 'mahasiswa', label: 'University' },
+  { value: 'profesional', label: 'Professional' },
+  { value: 'umum', label: 'General' },
 ];
 
 const minatOptions = [
-  { value: 'edukasi', title: 'Edukasi & Pengajaran', sub: 'ThreeL Mengajar dan literasi' },
-  { value: 'sosial', title: 'Aksi Sosial & Medis', sub: 'Donor darah dan bakti sosial' },
-  { value: 'lingkungan', title: 'Lingkungan & Pertanian Kota', sub: 'ThreeL Berakar' },
+  { value: 'edukasi', title: 'Education & Teaching', sub: 'ThreeL Mengajar and literacy' },
+  { value: 'sosial', title: 'Social & Medical Action', sub: 'Blood drives and community service' },
+  { value: 'lingkungan', title: 'Environment & Urban Farming', sub: 'ThreeL Berakar' },
 ];
 
 const prefOptions = [
-  { value: 'daring', title: 'Daring saja', sub: 'Konten, riset, atau pendampingan online' },
-  { value: 'lapangan', title: 'Siap terjun lapangan', sub: 'Akhir pekan, mengikuti jadwal aksi' },
+  { value: 'daring', title: 'Online only', sub: 'Content, research, or online mentoring' },
+  { value: 'lapangan', title: 'Ready for fieldwork', sub: 'Weekends, following the action schedule' },
 ];
 
 const perks = [
-  { icon: Check, text: 'Tanpa CV dan tanpa esai', gold: false },
-  { icon: Clock, text: 'Ikut aksi saat kamu sempat', gold: false },
-  { icon: HeartHandshake, text: 'Bertemu teman seperjuangan', gold: true },
+  { icon: Check, text: 'Selection process through FGD only', gold: false },
+  { icon: Clock, text: 'Join actions whenever you can', gold: false },
+  { icon: HeartHandshake, text: 'Meet people who share your drive', gold: true },
 ];
 
 export function MemberForm({ status }: { status: RecruitmentStatus }) {
   const waitlist = status === 'waitlist';
   const form = useForm(initial, () => ({
     nama: { required: true },
-    usia: { required: true, min: 14, max: 70, rangeMsg: 'Usia relawan antara 14 dan 70 tahun.' },
+    usia: { required: true, min: 14, max: 70, rangeMsg: 'Volunteers must be between 14 and 70 years old.' },
     email: { required: true, email: true },
     wa: { required: true, phone: true },
     kota: { required: true },
-    status: { required: true, requiredMsg: 'Pilih status kamu.' },
-    minat: { required: true, requiredMsg: 'Pilih minimal satu minat aksi.' },
-    pref: { required: true, requiredMsg: 'Pilih preferensi keterlibatan.' },
+    status: { required: true, requiredMsg: 'Please choose your current status.' },
+    minat: { required: true, requiredMsg: 'Please choose at least one area of interest.' },
+    pref: { required: true, requiredMsg: 'Please choose how you would like to take part.' },
   }));
   const { values: v, set, errors: err } = form;
   const tone = 'friendly' as const;
@@ -68,15 +68,15 @@ export function MemberForm({ status }: { status: RecruitmentStatus }) {
   return (
     <Container className="grid items-start gap-10 py-12 lg:grid-cols-[440px_minmax(0,1fr)] lg:gap-12 lg:py-16">
       <div className="flex flex-col gap-6 rounded-[32px] bg-mint p-8 sm:p-11 lg:sticky lg:top-28">
-        <BackToRoles label="Pilihan peran" className="text-brand hover:text-forest" />
+        <BackToRoles label="All roles" className="text-brand hover:text-forest" />
         <StatusBadge status={status} className="w-fit" />
         <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-forest sm:text-[44px]">
-          Hai, calon ThreeLearnian!
+          Hi, future ThreeLearnian!
         </h1>
         <p className="text-[17px] leading-relaxed text-muted">
           {waitlist
-            ? 'Pendaftaran relawan sedang ditutup. Isi formulir ini untuk masuk daftar tunggu; kami menghubungimu saat pendaftaran dibuka kembali.'
-            : 'Satu halaman, sekitar tiga menit. Setelah terdaftar, kamu akan menerima info aksi terdekat sesuai minatmu.'}
+            ? 'Volunteer registration is currently closed. Fill in this form to join the waitlist, and we will contact you when registration reopens.'
+            : 'One page, about three minutes. Once registered, you will receive news about upcoming actions that match your interests.'}
         </p>
         <ul className="flex flex-col gap-4">
           {perks.map(({ icon: Icon, text, gold }) => (
@@ -101,12 +101,12 @@ export function MemberForm({ status }: { status: RecruitmentStatus }) {
             <Check className="size-8" strokeWidth={2.6} aria-hidden />
           </span>
           <h2 className="text-[32px] font-extrabold">
-            {waitlist ? `Terima kasih, ${v.nama}!` : `Selamat datang, ${v.nama}!`}
+            {waitlist ? `Thank you, ${v.nama}!` : `Welcome, ${v.nama}!`}
           </h2>
           <p className="text-base leading-relaxed text-sage">
             {waitlist
-              ? `Kamu masuk daftar tunggu relawan. Kami akan mengabari lewat WhatsApp ${v.wa} saat pendaftaran dibuka.`
-              : `Kamu resmi jadi ThreeLearnian. Info aksi terdekat di ${v.kota} akan dikirim ke WhatsApp ${v.wa}.`}
+              ? `You are on the volunteer waitlist. We will message you on WhatsApp at ${v.wa} when registration opens.`
+              : `You are officially a ThreeLearnian. News about upcoming actions in ${v.kota} will be sent to WhatsApp ${v.wa}.`}
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
             <a
@@ -115,25 +115,25 @@ export function MemberForm({ status }: { status: RecruitmentStatus }) {
               rel="noopener noreferrer"
               className="flex h-12 items-center rounded-full bg-gold px-6 font-bold text-forest hover:bg-gold-soft"
             >
-              Ikuti @{contact.instagram}
+              Follow @{contact.instagram}
             </a>
             <button type="button" onClick={form.reset} className="h-12 rounded-full border-[1.5px] border-white/50 px-6 font-bold text-white hover:border-white">
-              Daftarkan teman
+              Register a friend
             </button>
           </div>
         </div>
       ) : (
         <form onSubmit={form.submit} noValidate className="flex flex-col gap-7 rounded-[32px] border border-line bg-white p-6 sm:p-10">
           <div className="grid gap-4 sm:grid-cols-2">
-            <TextField tone={tone} id="nama" label="Nama lengkap" className="sm:col-span-2" value={v.nama} onChange={(x) => set('nama', x)} error={err.nama} autoComplete="name" />
-            <TextField tone={tone} id="usia" type="number" inputMode="numeric" label="Usia" value={v.usia} onChange={(x) => set('usia', x)} error={err.usia} />
-            <TextField tone={tone} id="kota" label="Kota / domisili" value={v.kota} onChange={(x) => set('kota', x)} error={err.kota} autoComplete="address-level2" placeholder="Bandung" />
-            <TextField tone={tone} id="email" type="email" label="Email" value={v.email} onChange={(x) => set('email', x)} error={err.email} autoComplete="email" placeholder="nama@domain.com" />
-            <TextField tone={tone} id="wa" type="tel" label="Nomor WhatsApp" value={v.wa} onChange={(x) => set('wa', x)} error={err.wa} autoComplete="tel" placeholder="0812 3456 7890" />
+            <TextField tone={tone} id="nama" label="Full name" className="sm:col-span-2" value={v.nama} onChange={(x) => set('nama', x)} error={err.nama} autoComplete="name" />
+            <TextField tone={tone} id="usia" type="number" inputMode="numeric" label="Age" value={v.usia} onChange={(x) => set('usia', x)} error={err.usia} />
+            <TextField tone={tone} id="kota" label="City" value={v.kota} onChange={(x) => set('kota', x)} error={err.kota} autoComplete="address-level2" placeholder="Bandung" />
+            <TextField tone={tone} id="email" type="email" label="Email" value={v.email} onChange={(x) => set('email', x)} error={err.email} autoComplete="email" placeholder="name@domain.com" />
+            <TextField tone={tone} id="wa" type="tel" label="WhatsApp number" value={v.wa} onChange={(x) => set('wa', x)} error={err.wa} autoComplete="tel" placeholder="0812 3456 7890" />
           </div>
 
           <fieldset id="status" tabIndex={-1} className="flex flex-col gap-3 focus:outline-none">
-            <legend className="mb-3 text-base font-extrabold text-forest">Status kamu saat ini</legend>
+            <legend className="mb-3 text-base font-extrabold text-forest">Your current status</legend>
             <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
               {statusOptions.map((o) => {
                 const checked = v.status === o.value;
@@ -156,7 +156,7 @@ export function MemberForm({ status }: { status: RecruitmentStatus }) {
 
           <fieldset id="minat" tabIndex={-1} className="flex flex-col gap-2.5 focus:outline-none">
             <legend className="mb-3 text-base font-extrabold text-forest">
-              Minat aksi lapangan <span className="text-[13px] font-semibold text-muted">(boleh lebih dari satu)</span>
+              Areas of interest <span className="text-[13px] font-semibold text-muted">(choose one or more)</span>
             </legend>
             {minatOptions.map((o) => {
               const checked = v.minat.includes(o.value);
@@ -180,7 +180,7 @@ export function MemberForm({ status }: { status: RecruitmentStatus }) {
           </fieldset>
 
           <fieldset id="pref" tabIndex={-1} className="flex flex-col gap-3 focus:outline-none">
-            <legend className="mb-3 text-base font-extrabold text-forest">Preferensi keterlibatan</legend>
+            <legend className="mb-3 text-base font-extrabold text-forest">How you would like to take part</legend>
             <div className="grid gap-3 sm:grid-cols-2">
               {prefOptions.map((o) => {
                 const checked = v.pref === o.value;
@@ -209,7 +209,7 @@ export function MemberForm({ status }: { status: RecruitmentStatus }) {
               disabled={form.submitting}
               className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-forest px-8 font-extrabold text-white transition hover:bg-brand disabled:opacity-60 sm:ml-auto"
             >
-              {waitlist ? 'Submit' : 'Gabung sekarang'}
+              {waitlist ? 'Submit' : 'Join now'}
               <ArrowRight className="size-[18px]" aria-hidden />
             </button>
           </div>

@@ -1,5 +1,6 @@
 import { Container } from '@/components/ui/section';
 import { TopoBackground } from '@/components/ui/topo-background';
+import { T } from '@/lib/i18n';
 
 /** Pita visi selebar layar: teks di tengah di atas peta topografi hijau yang bergerak pelan. */
 export function VisionCard() {
@@ -15,10 +16,12 @@ export function VisionCard() {
 
       <Container className="py-20 lg:py-28">
         <div className="mx-auto flex max-w-[760px] flex-col items-center gap-7 text-center">
-          <span className="font-mono text-xs font-semibold tracking-[0.3em] text-[#8FD3B6]">VISI</span>
+          <span className="font-mono text-xs font-semibold tracking-[0.3em] text-[#8FD3B6]">
+            <T id="VISI" en="VISION" />
+          </span>
 
           <p className="text-2xl font-bold leading-snug tracking-tight sm:text-[30px]">
-            Menjadi wadah pemuda yang melahirkan
+            <T id="Menjadi wadah pemuda yang melahirkan" en="To be a home for young people that raises" />
             <span className="relative mx-auto my-3 block w-fit">
               <span className="block -skew-x-6 bg-gradient-to-r from-[#B7E4C7] via-[#5FBF94] to-[#8FD3B6] bg-clip-text pr-1 text-[26px] font-extrabold italic leading-tight tracking-tight text-transparent sm:text-[38px] lg:text-[46px]">
                 #ShapingChangemakers
@@ -34,7 +37,10 @@ export function VisionCard() {
                 <path d="M3 11C80 5 190 3 297 6" pathLength={1} stroke="url(#brush-grad)" strokeWidth="6" strokeLinecap="round" fill="none" />
               </svg>
             </span>
-            bagi Indonesia yang bebas dari kemiskinan, melalui pendidikan, teknologi, dan pemberdayaan sosial.
+            <T
+              id="bagi Indonesia yang bebas dari kemiskinan, melalui pendidikan, teknologi, dan pemberdayaan sosial."
+              en="for a poverty-free Indonesia, through education, technology, and social empowerment."
+            />
           </p>
         </div>
       </Container>

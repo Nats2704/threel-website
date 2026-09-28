@@ -19,3 +19,27 @@ export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+/**
+ * Ikon dari gambar PNG transparan, diwarnai lewat CSS mask supaya mengikuti warna teks
+ * (`currentColor`) seperti ikon lucide.
+ */
+function maskIcon(src: string) {
+  function MaskIcon({ className }: { className?: string }) {
+    const mask = `url(${src}) center / 88% no-repeat`;
+    return (
+      <span
+        aria-hidden
+        className={`inline-block shrink-0 bg-current ${className ?? ''}`}
+        style={{ mask, WebkitMask: mask }}
+      />
+    );
+  }
+  return MaskIcon;
+}
+
+/** Board of Director: roda gigi berbintang di atas tiga orang. */
+export const LeadershipIcon = maskIcon('/images/ikon/bod.png');
+
+/** Associate: empat tangan saling menggenggam. */
+export const TeamHandsIcon = maskIcon('/images/ikon/associate.png');

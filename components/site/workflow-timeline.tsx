@@ -11,18 +11,20 @@ import {
 } from 'motion/react';
 import { BookOpen, Eye, FileText, Flag, Gauge, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { useLang } from '@/lib/i18n';
 import { Container } from '@/components/ui/section';
 import { RoadCar } from './road-car';
 import type { workflow } from '@/lib/content';
 
 type Step = (typeof workflow)[number];
 
-const icons: Record<string, LucideIcon> = { LOOK: Eye, LEARN: BookOpen, LEAD: Flag, UKUR: Gauge, LAPOR: FileText };
+// Ikon per nomor tahap, urut sesuai workflow.
+const icons: Record<string, LucideIcon> = { '01': Eye, '02': BookOpen, '03': Flag, '04': Gauge, '05': FileText };
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
  * Satu baris roadmap: jalur di tengah, tahap bergantian di atas dan di bawahnya.
- * Grid 3 baris (1fr · jalur · 1fr) dibagi ke tiap <li> lewat subgrid, jadi semua tangkai bertemu jalur di garis yang sama.
+ * Grid 3 baris (1fr, jalur, 1fr) dibagi ke tiap <li> lewat subgrid, jadi semua tangkai bertemu jalur di garis yang sama.
  */
 function Roadmap({
   steps,
@@ -83,7 +85,8 @@ function Stage({
   lit: boolean;
   onActive?: (i: number | null) => void;
 }) {
-  const Icon = icons[step.tag] ?? Flag;
+  const { t } = useLang();
+  const Icon = icons[step.no] ?? Flag;
   const tone = step.gold
     ? { fill: 'bg-gold', ring: 'border-gold', text: 'text-gold', stem: 'bg-gold/70', glow: 'shadow-[0_0_0_8px_rgba(242,201,76,0.14)]' }
     : { fill: 'bg-white', ring: 'border-white', text: 'text-sage-muted', stem: 'bg-white/50', glow: 'shadow-[0_0_0_8px_rgba(255,255,255,0.12)]' };
@@ -142,13 +145,14 @@ function Stage({
         lit ? 'border-white/25 bg-white/[0.11]' : 'border-white/12 bg-white/[0.06]',
       )}
     >
-      <span className={cn('font-mono text-xs font-semibold tracking-[0.14em]', tone.text)}>
-        {step.no} · {step.tag}
+      <span className={cn('flex items-center gap-2 font-mono text-xs font-semibold tracking-[0.14em]', tone.text)}>
+        <span className="rounded border border-current px-1 py-px text-[10px] tracking-normal opacity-80">{step.no}</span>
+        {t(step.tag)}
       </span>
       <h3 className={cn('mt-1.5 font-extrabold leading-snug text-white', compact ? 'text-base' : 'text-[17px]')}>
-        {step.title}
+        {t(step.title)}
       </h3>
-      <p className="mt-1 text-sm leading-relaxed text-sage">{step.desc}</p>
+      <p className="mt-1 text-sm leading-relaxed text-sage">{t(step.desc)}</p>
     </motion.div>
   );
 

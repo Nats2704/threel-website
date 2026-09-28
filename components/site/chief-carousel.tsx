@@ -6,6 +6,7 @@ import { AnimatePresence, MotionConfig, motion, type PanInfo } from 'motion/reac
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { cLevels } from '@/lib/content';
+import { useLang } from '@/lib/i18n';
 
 // Posisi kartu di tumpukan menurut jaraknya dari kartu aktif (0 = paling depan).
 const STACK = [
@@ -29,6 +30,7 @@ const palettes = [
 ];
 
 export function ChiefCarousel() {
+  const { t } = useLang();
   const [[active, dir], setState] = useState<[number, 1 | -1]>([0, 1]);
   const n = cLevels.length;
   const go = (d: 1 | -1) => setState(([i]) => [(i + d + n) % n, d]);
@@ -45,7 +47,7 @@ export function ChiefCarousel() {
       <div
         role="region"
         aria-roledescription="carousel"
-        aria-label="Jajaran C-Level ThreeL"
+        aria-label={t('Jajaran C-Level ThreeL', 'ThreeL C-Level team')}
         onKeyDown={(e) => {
           if (e.key === 'ArrowLeft') go(-1);
           if (e.key === 'ArrowRight') go(1);
@@ -101,7 +103,7 @@ export function ChiefCarousel() {
                 <h3 className="text-[28px] font-extrabold leading-tight text-forest sm:text-[32px]">{chief.name}</h3>
                 <p className="text-base text-muted">{chief.title}</p>
                 <blockquote className="mt-5 text-lg leading-relaxed text-ink sm:text-xl">
-                  {chief.quote.split(' ').map((word, i) => (
+                  {t(chief.quote).split(' ').map((word, i) => (
                     <motion.span
                       key={i}
                       initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }}
@@ -119,9 +121,9 @@ export function ChiefCarousel() {
 
           {/* Tombol hanya di desktop; di HP cukup digeser. */}
           <div className="hidden w-fit items-center rounded-full lg:inline-flex border border-line bg-white/80 p-1 shadow-[0_8px_24px_-12px_rgba(11,59,46,0.25)] backdrop-blur">
-            <NavButton label="Pimpinan sebelumnya" onClick={() => go(-1)} dir={-1} />
+            <NavButton label={t('Pimpinan sebelumnya', 'Previous leader')} onClick={() => go(-1)} dir={-1} />
             <span className="h-5 w-px bg-line" aria-hidden />
-            <NavButton label="Pimpinan berikutnya" onClick={() => go(1)} dir={1} />
+            <NavButton label={t('Pimpinan berikutnya', 'Next leader')} onClick={() => go(1)} dir={1} />
           </div>
         </div>
       </div>
@@ -131,6 +133,7 @@ export function ChiefCarousel() {
 
 /** Foto berlatar transparan (jas/korporat) di atas latar warna yang di-blur dan bergerak pelan. */
 function ChiefPortrait({ chief, colors, front }: { chief: (typeof cLevels)[number]; colors: string[]; front: boolean }) {
+  const { t } = useLang();
   return (
     <>
       <div aria-hidden className="absolute inset-0">
@@ -154,7 +157,7 @@ function ChiefPortrait({ chief, colors, front }: { chief: (typeof cLevels)[numbe
         {chief.photo ? (
           <Image
             src={chief.photo}
-            alt={`Foto ${chief.name}, ${chief.title}`}
+            alt={`${t('Foto', 'Photo of')} ${chief.name}, ${chief.title}`}
             fill
             sizes="(min-width: 1024px) 360px, 320px"
             className="object-contain object-bottom drop-shadow-[0_20px_30px_rgba(11,59,46,0.35)]"

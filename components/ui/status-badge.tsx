@@ -1,5 +1,6 @@
 import { cn } from '@/lib/cn';
 import { statusMeta, type RecruitmentStatus } from '@/lib/recruitment';
+import { T } from '@/lib/i18n';
 
 export function StatusBadge({
   status,
@@ -12,7 +13,7 @@ export function StatusBadge({
 }) {
   const meta =
     status === 'rolling'
-      ? { label: 'Selalu dibuka', badge: 'bg-green-100 text-green-900', dot: 'bg-green-600' }
+      ? { label: <T id="Selalu dibuka" en="Always open" />, badge: 'bg-green-100 text-green-900', dot: 'bg-green-600' }
       : statusMeta[status];
   return (
     <span

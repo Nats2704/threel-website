@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { pillars } from '@/lib/content';
+import { useLang, type Bi } from '@/lib/i18n';
 import { useForm } from '@/hooks/use-form';
 import { ErrorSummary, SelectField, TextAreaField, TextField } from './fields';
 
@@ -32,32 +33,33 @@ const initial: PartnerValues = {
   pesan: '',
 };
 
-const jenisOptions = [
-  { value: 'csr', label: 'Korporasi / CSR' },
-  { value: 'medis', label: 'Instansi medis (PMI / RS)' },
-  { value: 'kampus', label: 'Kampus' },
-  { value: 'komunitas', label: 'Komunitas / organisasi' },
-  { value: 'pemerintah', label: 'Instansi pemerintah' },
-  { value: 'lainnya', label: 'Lainnya' },
+const jenisOptions: Array<{ value: string; label: Bi }> = [
+  { value: 'csr', label: { id: 'Korporasi / CSR', en: 'Company / CSR' } },
+  { value: 'medis', label: { id: 'Instansi medis (PMI / RS)', en: 'Medical institution (PMI / hospital)' } },
+  { value: 'kampus', label: { id: 'Kampus', en: 'University' } },
+  { value: 'komunitas', label: { id: 'Komunitas / organisasi', en: 'Community / organization' } },
+  { value: 'pemerintah', label: { id: 'Instansi pemerintah', en: 'Government agency' } },
+  { value: 'lainnya', label: { id: 'Lainnya', en: 'Other' } },
 ];
 
-const bentukOptions = [
-  { value: 'dana', label: 'Pendanaan program / CSR' },
-  { value: 'kolaborasi', label: 'Kolaborasi program' },
-  { value: 'studi', label: 'Studi banding' },
-  { value: 'kesehatan', label: 'Donor darah dan kesehatan' },
-  { value: 'lainnya', label: 'Lainnya' },
+const bentukOptions: Array<{ value: string; label: Bi }> = [
+  { value: 'dana', label: { id: 'Pendanaan program / CSR', en: 'Program funding / CSR' } },
+  { value: 'kolaborasi', label: { id: 'Kolaborasi program', en: 'Program collaboration' } },
+  { value: 'studi', label: { id: 'Studi banding', en: 'Benchmarking visit' } },
+  { value: 'kesehatan', label: { id: 'Donor darah dan kesehatan', en: 'Blood drives and health' } },
+  { value: 'lainnya', label: { id: 'Lainnya', en: 'Other' } },
 ];
 
 export function PartnerForm() {
   const params = useSearchParams();
+  const { t } = useLang();
   const form = useForm(initial, () => ({
     institusi: { required: true },
-    jenis: { required: true, requiredMsg: 'Pilih jenis institusi.' },
+    jenis: { required: true, requiredMsg: t('Pilih jenis institusi.', 'Please choose an institution type.') },
     pic: { required: true },
     email: { required: true, email: true },
     wa: { required: true, phone: true },
-    bentuk: { required: true, requiredMsg: 'Pilih minimal satu bentuk kerja sama.' },
+    bentuk: { required: true, requiredMsg: t('Pilih minimal satu bentuk kerja sama.', 'Please choose at least one way to collaborate.') },
     pesan: { required: true },
   }));
   const { values: v, set, errors: err } = form;
@@ -73,17 +75,19 @@ export function PartnerForm() {
     return (
       <div role="status" className="flex flex-col items-start gap-4 rounded-3xl border border-mint-line bg-mint p-8 sm:p-12">
         <CheckCircle2 className="size-14 text-brand" aria-hidden />
-        <h3 className="text-[28px] font-extrabold text-forest">Pengajuan kemitraan terkirim</h3>
+        <h3 className="text-[28px] font-extrabold text-forest">{t('Pengajuan kemitraan terkirim', 'Partnership proposal sent')}</h3>
         <p className="text-base leading-relaxed text-muted">
-          Terima kasih, {v.institusi}. Tim kemitraan ThreeL akan menghubungi {v.pic} melalui {v.email} untuk menjadwalkan
-          diskusi kebutuhan.
+          {t(
+            `Terima kasih, ${v.institusi}. Tim kemitraan ThreeL akan menghubungi ${v.pic} melalui ${v.email} untuk menjadwalkan diskusi kebutuhan.`,
+            `Thank you, ${v.institusi}. The ThreeL partnerships team will contact ${v.pic} at ${v.email} to schedule a needs discussion.`,
+          )}
         </p>
         <button
           type="button"
           onClick={form.reset}
           className="h-12 rounded-full border-2 border-brand bg-white px-6 font-bold text-brand hover:bg-mint"
         >
-          Kirim pengajuan lain
+          {t('Kirim pengajuan lain', 'Send another proposal')}
         </button>
       </div>
     );
@@ -95,17 +99,17 @@ export function PartnerForm() {
   return (
     <form onSubmit={form.submit} noValidate className="flex flex-col gap-6 rounded-3xl border border-line bg-white p-6 sm:p-10">
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField id="institusi" label="Nama institusi" required value={v.institusi} onChange={(x) => set('institusi', x)} error={err.institusi} autoComplete="organization" placeholder="PT Contoh Sejahtera" />
-        <SelectField id="jenis" label="Jenis institusi" required value={v.jenis} onChange={(x) => set('jenis', x)} error={err.jenis} options={jenisOptions} placeholder="Pilih jenis institusi" />
-        <TextField id="pic" label="Nama penanggung jawab (PIC)" required value={v.pic} onChange={(x) => set('pic', x)} error={err.pic} autoComplete="name" />
-        <TextField id="jabatan" label="Jabatan PIC" value={v.jabatan} onChange={(x) => set('jabatan', x)} autoComplete="organization-title" />
-        <TextField id="email" type="email" label="Email kantor" required value={v.email} onChange={(x) => set('email', x)} error={err.email} autoComplete="email" placeholder="nama@institusi.co.id" />
-        <TextField id="wa" type="tel" label="Nomor WhatsApp" required value={v.wa} onChange={(x) => set('wa', x)} error={err.wa} autoComplete="tel" placeholder="0812 3456 7890" />
+        <TextField id="institusi" label={t('Nama institusi', 'Institution name')} required value={v.institusi} onChange={(x) => set('institusi', x)} error={err.institusi} autoComplete="organization" placeholder={t('PT Contoh Sejahtera', 'Example Company Ltd.')} />
+        <SelectField id="jenis" label={t('Jenis institusi', 'Institution type')} required value={v.jenis} onChange={(x) => set('jenis', x)} error={err.jenis} options={jenisOptions.map((o) => ({ value: o.value, label: t(o.label) }))} placeholder={t('Pilih jenis institusi', 'Choose institution type')} />
+        <TextField id="pic" label={t('Nama penanggung jawab (PIC)', 'Person in charge (PIC)')} required value={v.pic} onChange={(x) => set('pic', x)} error={err.pic} autoComplete="name" />
+        <TextField id="jabatan" label={t('Jabatan PIC', 'PIC job title')} value={v.jabatan} onChange={(x) => set('jabatan', x)} autoComplete="organization-title" />
+        <TextField id="email" type="email" label={t('Email kantor', 'Work email')} required value={v.email} onChange={(x) => set('email', x)} error={err.email} autoComplete="email" placeholder={t('nama@institusi.co.id', 'name@institution.com')} />
+        <TextField id="wa" type="tel" label={t('Nomor WhatsApp', 'WhatsApp number')} required value={v.wa} onChange={(x) => set('wa', x)} error={err.wa} autoComplete="tel" placeholder="0812 3456 7890" />
       </div>
 
       <fieldset id="bentuk" tabIndex={-1} className="flex flex-col gap-3 focus:outline-none">
         <legend className="mb-3 text-sm font-semibold">
-          Bentuk kerja sama <span className="text-danger">*</span>
+          {t('Bentuk kerja sama', 'Ways to collaborate')} <span className="text-danger">*</span>
         </legend>
         <div className="grid gap-2.5 sm:grid-cols-2">
           {bentukOptions.map((o) => {
@@ -119,7 +123,7 @@ export function PartnerForm() {
                 )}
               >
                 <input type="checkbox" checked={checked} onChange={() => toggleBentuk(o.value)} className="size-[18px] accent-brand" />
-                {o.label}
+                {t(o.label)}
               </label>
             );
           })}
@@ -129,20 +133,23 @@ export function PartnerForm() {
 
       <SelectField
         id="pilar"
-        label="Pilar yang diminati"
+        label={t('Pilar yang diminati', 'Pillar of interest')}
         value={v.pilar}
         onChange={(x) => set('pilar', x)}
-        options={pillars.map((p) => ({ value: p.id, label: p.title }))}
-        placeholder="Belum ditentukan"
+        options={pillars.map((p) => ({ value: p.id, label: t(p.title) }))}
+        placeholder={t('Belum ditentukan', 'Not decided yet')}
       />
       <TextAreaField
         id="pesan"
-        label="Ringkasan rencana kerja sama"
+        label={t('Ringkasan rencana kerja sama', 'Collaboration plan summary')}
         required
         value={v.pesan}
         onChange={(x) => set('pesan', x)}
         error={err.pesan}
-        placeholder="Tujuan, perkiraan waktu, dan skala kerja sama yang dibayangkan."
+        placeholder={t(
+          'Tujuan, perkiraan waktu, dan skala kerja sama yang dibayangkan.',
+          'The goals, expected timing, and scale of the collaboration you have in mind.',
+        )}
       />
 
       <div className="flex flex-col-reverse gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
@@ -152,7 +159,7 @@ export function PartnerForm() {
           disabled={form.submitting}
           className="inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-brand px-7 font-bold text-white transition hover:bg-forest disabled:opacity-60 sm:ml-auto"
         >
-          Kirim pengajuan
+          {t('Kirim pengajuan', 'Send proposal')}
           <ArrowRight className="size-[18px]" aria-hidden />
         </button>
       </div>

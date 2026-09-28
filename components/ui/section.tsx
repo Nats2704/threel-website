@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { T } from '@/lib/i18n';
 
 export function Container({ className, children }: { className?: string; children: React.ReactNode }) {
   return <div className={cn('mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8', className)}>{children}</div>;
@@ -20,8 +21,8 @@ export function SectionHeading({
   id,
   dark = false,
 }: {
-  eyebrow: string;
-  title: string;
+  eyebrow: React.ReactNode;
+  title: React.ReactNode;
   aside?: React.ReactNode;
   id?: string;
   dark?: boolean;
@@ -68,9 +69,9 @@ export function PageHeader({
   className,
   children,
 }: {
-  crumb: string;
-  title: string;
-  lead: string;
+  crumb: React.ReactNode;
+  title: React.ReactNode;
+  lead: React.ReactNode;
   /** Foto latar dekoratif; di desktop mengisi sisi kanan, di HP menjadi tekstur tipis di balik teks. */
   image?: string;
   /** Konten kolom kanan di desktop (mis. ilustrasi); di HP turun ke bawah teks. */
@@ -83,7 +84,7 @@ export function PageHeader({
     <>
       <nav aria-label="Breadcrumb" className="font-mono text-xs font-semibold tracking-[0.1em] text-muted">
         <Link href="/" className="text-brand hover:text-forest">
-          BERANDA
+          <T id="BERANDA" en="HOME" />
         </Link>{' '}
         / {crumb}
       </nav>
@@ -124,22 +125,37 @@ export function PhotoPlaceholder({
   caption,
   tone = 'green',
   size = 'md',
+  src,
+  credit,
   className,
 }: {
-  caption: string;
+  caption: React.ReactNode;
   tone?: 'green' | 'gold';
   size?: 'md' | 'lg';
+  /** Foto kegiatan; bila kosong, tampil ikon penanda tempat foto. */
+  src?: string;
+  /** Kredit foto yang wajib tampil (mis. lisensi CC BY). */
+  credit?: string;
   className?: string;
 }) {
   return (
     <figure
       className={cn(
-        'relative m-0 flex min-h-40 items-center justify-center rounded-2xl',
+        'relative m-0 flex min-h-40 items-center justify-center overflow-hidden rounded-2xl',
         tone === 'green' ? 'bg-[#DCEBE3] text-[#5E8A74]' : 'bg-[#F4ECD2] text-gold-ink',
         className,
       )}
     >
-      <ImageIcon className={size === 'lg' ? 'size-14' : 'size-9'} strokeWidth={1.5} aria-hidden />
+      {src ? (
+        <Image src={src} alt="" fill sizes="(min-width: 1024px) 300px, 50vw" className="object-cover" />
+      ) : (
+        <ImageIcon className={size === 'lg' ? 'size-14' : 'size-9'} strokeWidth={1.5} aria-hidden />
+      )}
+      {credit ? (
+        <span className="absolute right-3 top-2.5 text-[10px] rounded bg-black/45 px-1.5 py-0.5 text-white backdrop-blur-sm">
+          {credit}
+        </span>
+      ) : null}
       <figcaption className="absolute bottom-3.5 left-3.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-ink sm:text-[13px]">
         {caption}
       </figcaption>

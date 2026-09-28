@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import { Container, PageHeader, SectionHeading } from '@/components/ui/section';
 import { Reveal } from '@/components/ui/reveal';
 import { ChiefCarousel } from '@/components/site/chief-carousel';
@@ -9,6 +8,8 @@ import { VisionCard } from '@/components/site/vision-card';
 import { MissionOrbit } from '@/components/site/mission-orbit';
 import { ParallaxBackdrop } from '@/components/ui/parallax-backdrop';
 import { ScrollDrift, ScrollZoom } from '@/components/ui/scroll-motion';
+import { T } from '@/lib/i18n';
+import { LocalizedImage } from '@/components/ui/localized-image';
 
 export const metadata: Metadata = { title: 'Tentang Kami' };
 
@@ -16,16 +17,24 @@ export default function TentangPage() {
   return (
     <ParallaxBackdrop src="/images/latar-tentang.webp">
       <PageHeader
-        crumb="TENTANG KAMI"
+        crumb={<T id="TENTANG KAMI" en="ABOUT US" />}
         className="bg-mint/55"
-        title="Tumbuh dari keresahan, bergerak untuk solusi."
-        lead="Kami melihat masalah dari dekat, belajar bersama, lalu memimpin aksi yang berdampak bagi masyarakat prasejahtera."
+        title={<T id="Tumbuh dari keresahan, bergerak untuk solusi." en="Born from concern, moving toward solutions." />}
+        lead={
+          <T
+            id="Kami melihat masalah dari dekat, belajar bersama, lalu memimpin aksi yang berdampak bagi masyarakat prasejahtera."
+            en="We look at problems up close, learn together, and then lead action that makes a difference for low-income communities."
+          />
+        }
         aside={
           // Margin negatif di desktop membuat maskot hampir menyentuh batas atas dan bawah header.
           <ScrollDrift range={[-20, 70]} className="mx-auto w-full max-w-[260px] sm:max-w-[300px] lg:-my-12 lg:max-w-none">
-            <Image
+            <LocalizedImage
               src="/images/maskot-tentang-bingung.webp"
-              alt="Maskot pohon ThreeL berpose berpikir dengan tanda tanya di sampingnya."
+              alt={{
+                id: 'Maskot pohon ThreeL berpose berpikir dengan tanda tanya di sampingnya.',
+                en: 'The ThreeL tree mascot in a thinking pose with a question mark beside it.',
+              }}
               width={878}
               height={1328}
               priority
@@ -36,7 +45,8 @@ export default function TentangPage() {
         }
       />
 
-      <section aria-label="Visi dan misi" className="pb-20 lg:pb-24">
+      {/* overflow-x-clip: ikon orbit yang berputar tidak boleh membuat halaman bisa digeser ke samping di HP. */}
+      <section aria-labelledby="misi-title" className="overflow-x-clip pb-20 lg:pb-24">
         {/* Pita visi menempel langsung di bawah header dan membentang penuh kiri-kanan. */}
         <ScrollZoom className="overflow-hidden">
           <VisionCard />
@@ -46,8 +56,9 @@ export default function TentangPage() {
             <Reveal>
               <ScrollDrift range={[24, -24]}>
                 <SectionHeading
-                  eyebrow="Misi"
-                  title="Empat langkah menuju visi itu."
+                  id="misi-title"
+                  eyebrow={<T id="Misi" en="Mission" />}
+                  title={<T id="Empat langkah menuju visi itu." en="Four steps toward that vision." />}
                 />
               </ScrollDrift>
             </Reveal>
@@ -65,8 +76,13 @@ export default function TentangPage() {
               <SectionHeading
                 id="nilai-title"
                 eyebrow="Core values"
-                title="Enam nilai yang kami pegang di setiap aksi."
-                aside="Nilai ini menjadi dasar rekrutmen, evaluasi kinerja, dan cara kami mengambil keputusan bersama."
+                title={<T id="Enam nilai yang kami pegang di setiap aksi." en="Six values we hold in every action." />}
+                aside={
+                  <T
+                    id="Nilai ini menjadi dasar rekrutmen, evaluasi kinerja, dan cara kami mengambil keputusan bersama."
+                    en="These values guide our recruitment, performance reviews, and how we make decisions together."
+                  />
+                }
               />
             </ScrollDrift>
           </Reveal>
@@ -83,8 +99,8 @@ export default function TentangPage() {
             <ScrollDrift range={[24, -24]}>
               <SectionHeading
                 id="struktur-title"
-                eyebrow="Struktur organisasi"
-                title="Dipimpin pemuda, dikelola secara profesional."
+                eyebrow={<T id="Struktur organisasi" en="Organization structure" />}
+                title={<T id="Dipimpin pemuda, dikelola secara profesional." en="Led by young people, run professionally." />}
               />
             </ScrollDrift>
           </Reveal>

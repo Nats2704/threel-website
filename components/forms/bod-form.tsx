@@ -10,6 +10,7 @@ import { Container } from '@/components/ui/section';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { BackToRoles } from './back-link';
 import { ConsentCheckbox, ErrorSummary, FileField, SelectField, TextAreaField, TextField } from './fields';
+import { SelectionSteps } from './selection-steps';
 
 type BodValues = {
   nama: string;
@@ -36,8 +37,6 @@ const initial: BodValues = {
   esai2: '',
   komitmen: false,
 };
-
-const steps = ['Seleksi Berkas', 'Focus Group Discussion', 'Wawancara', 'Mini Presentation', 'Onboarding'];
 
 function SectionCard({ no, title, desc, children }: { no: string; title: string; desc: string; children: React.ReactNode }) {
   return (
@@ -66,15 +65,15 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
     email: { required: true, email: true },
     wa: { required: true, phone: true },
     linkedin: { required: true, url: true, host: 'linkedin.com' },
-    posisi: { required: true, requiredMsg: 'Pilih posisi yang kamu lamar.' },
+    posisi: { required: true, requiredMsg: 'Please choose the position you are applying for.' },
     cv: { file: { required: true, types: ['pdf'], maxMB: 5 } },
     portofolio: { required: true, url: true },
     esai1: essay,
     esai2: essay,
-    komitmen: { checked: true, checkedMsg: 'Centang untuk mengonfirmasi komitmen minimal 15–20 jam per minggu.' },
+    komitmen: { checked: true, checkedMsg: 'Please tick to confirm a commitment of at least 15–20 hours per week.' },
   }));
   const { values: v, set, errors: err } = form;
-  const scope = cLevels.find((c) => c.value === v.posisi)?.scope;
+  const scope = cLevels.find((c) => c.value === v.posisi)?.scope.en;
   const tone = 'formal' as const;
 
   return (
@@ -85,15 +84,15 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
             <BackToRoles className="text-sage hover:text-white" />
             <div className="flex flex-wrap items-center gap-3">
               <span className="font-mono text-xs font-semibold tracking-[0.16em] text-gold">
-                BOARD OF DIRECTOR · C-LEVEL EXECUTIVE
+                BOARD OF DIRECTOR APPLICATION
               </span>
               <StatusBadge status={status} />
             </div>
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Pimpin arah strategis ThreeL.</h1>
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Lead ThreeL’s strategic direction.</h1>
             <p className="text-[17px] leading-relaxed text-sage">
               {waitlist
-                ? 'Batch rekrutmen BOD sedang ditutup. Isi formulir ini untuk masuk daftar tunggu; kami menghubungimu saat batch berikutnya dibuka.'
-                : 'Kami mencari pimpinan eksekutif yang siap memegang arah divisi, membangun tim, dan bertanggung jawab atas dampak program.'}
+                ? 'BoD recruitment is currently closed. Fill in this form to join the waitlist, and we will contact you when the next batch opens.'
+                : 'We are looking for executive leaders ready to set the direction of a division, build a team, and take responsibility for program impact.'}
             </p>
           </div>
         </Container>
@@ -101,23 +100,7 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
 
       <Container className="grid items-start gap-10 py-12 lg:grid-cols-[320px_minmax(0,1fr)] lg:py-14">
         <aside className="flex flex-col gap-5 lg:sticky lg:top-28">
-          <div className="flex flex-col gap-4 rounded-md border border-[#DCE3DF] bg-white p-7">
-            <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-brand">TAHAPAN SELEKSI</span>
-            {/* Penanda alur statis, bukan pelacak status. */}
-            <ol className="flex flex-col">
-              {steps.map((s, i) => (
-                <li key={s} className="relative flex gap-4 pb-6 last:pb-0">
-                  {i < steps.length - 1 ? (
-                    <span className="absolute left-[15px] top-8 bottom-0 w-0.5 bg-mint-line" aria-hidden />
-                  ) : null}
-                  <span className="relative flex size-8 shrink-0 items-center justify-center rounded-full border-2 border-brand bg-mint font-mono text-[11px] font-semibold text-brand">
-                    0{i + 1}
-                  </span>
-                  <span className="pt-1 text-[15px] font-semibold text-forest">{s}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
+          <SelectionSteps className="rounded-md border-[#DCE3DF]" />
         </aside>
 
         {form.sent ? (
@@ -126,77 +109,77 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
               <Check className="size-7" strokeWidth={2.6} aria-hidden />
             </span>
             <h2 className="text-[30px] font-extrabold text-forest">
-              {waitlist ? 'Kamu masuk daftar tunggu BOD' : 'Lamaran BOD diterima'}
+              {waitlist ? 'You are on the BoD waitlist' : 'BoD application received'}
             </h2>
             <p className="text-base leading-relaxed text-muted">
-              Terima kasih, {v.nama}. Tim HR ThreeL akan menghubungimu melalui {v.email} dan WhatsApp untuk tahap berikutnya.
+              Thank you, {v.nama}. The ThreeL HR team will contact you at {v.email} and on WhatsApp about the next stage.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <Link href="/" className="flex h-12 items-center rounded-md bg-forest px-6 font-bold text-white hover:bg-brand">
-                Kembali ke beranda
+                Back to home
               </Link>
               <button type="button" onClick={form.reset} className="h-12 rounded-md border border-forest bg-white px-6 font-bold text-forest">
-                Isi formulir baru
+                Fill in a new form
               </button>
             </div>
           </div>
         ) : (
           <form onSubmit={form.submit} noValidate className="flex flex-col gap-6">
-            <SectionCard no="01" title="Data diri & profesional" desc="Kami memakai kontak ini untuk seluruh proses seleksi.">
+            <SectionCard no="01" title="Personal & professional details" desc="We use these contacts throughout the selection process.">
               <div className="grid gap-5 sm:grid-cols-2">
-                <TextField tone={tone} id="nama" label="Nama lengkap" required value={v.nama} onChange={(x) => set('nama', x)} error={err.nama} autoComplete="name" />
-                <TextField tone={tone} id="email" type="email" label="Email" required value={v.email} onChange={(x) => set('email', x)} error={err.email} autoComplete="email" placeholder="nama@domain.com" />
-                <TextField tone={tone} id="wa" type="tel" label="Nomor WhatsApp" required value={v.wa} onChange={(x) => set('wa', x)} error={err.wa} autoComplete="tel" placeholder="0812 3456 7890" />
-                <TextField tone={tone} id="linkedin" type="url" label="Tautan profil LinkedIn" required value={v.linkedin} onChange={(x) => set('linkedin', x)} error={err.linkedin} placeholder="https://www.linkedin.com/in/namamu" />
+                <TextField tone={tone} id="nama" label="Full name" required value={v.nama} onChange={(x) => set('nama', x)} error={err.nama} autoComplete="name" />
+                <TextField tone={tone} id="email" type="email" label="Email" required value={v.email} onChange={(x) => set('email', x)} error={err.email} autoComplete="email" placeholder="name@domain.com" />
+                <TextField tone={tone} id="wa" type="tel" label="WhatsApp number" required value={v.wa} onChange={(x) => set('wa', x)} error={err.wa} autoComplete="tel" placeholder="0812 3456 7890" />
+                <TextField tone={tone} id="linkedin" type="url" label="LinkedIn profile link" required value={v.linkedin} onChange={(x) => set('linkedin', x)} error={err.linkedin} placeholder="https://www.linkedin.com/in/yourname" />
               </div>
             </SectionCard>
 
-            <SectionCard no="02" title="Posisi yang dilamar" desc="Pilih satu posisi C-Level.">
+            <SectionCard no="02" title="Position" desc="Choose one C-Level position.">
               <SelectField
                 tone={tone}
                 id="posisi"
-                label="Posisi"
+                label="Position"
                 required
                 value={v.posisi}
                 onChange={(x) => set('posisi', x)}
                 error={err.posisi}
-                placeholder="Pilih posisi"
+                placeholder="Choose a position"
                 options={cLevels.map((c) => ({ value: c.value, label: `${c.title} (${c.code})` }))}
               />
               {scope ? (
                 <p className="rounded border-l-[3px] border-gold-deep bg-surface px-5 py-4 text-sm leading-relaxed">
-                  <strong>Lingkup peran:</strong> {scope}
+                  <strong>Role scope.</strong> {scope}
                 </p>
               ) : null}
             </SectionCard>
 
-            <SectionCard no="03" title="Dokumen pendukung" desc="CV wajib dalam format PDF, maksimal 5 MB.">
-              <FileField tone={tone} id="cv" label="CV / Resume terbaru" required file={v.cv} onChange={(f) => set('cv', f)} error={err.cv} accept=".pdf,application/pdf" note="PDF, maksimal 5 MB" />
+            <SectionCard no="03" title="Supporting documents" desc="Your CV must be a PDF of 5 MB or smaller.">
+              <FileField tone={tone} id="cv" label="Latest CV / resume" required file={v.cv} onChange={(f) => set('cv', f)} error={err.cv} accept=".pdf,application/pdf" note="PDF, up to 5 MB" />
               <TextField
                 tone={tone}
                 id="portofolio"
                 type="url"
-                label="Tautan portofolio kepemimpinan"
+                label="Leadership portfolio link"
                 required
                 value={v.portofolio}
                 onChange={(x) => set('portofolio', x)}
                 error={err.portofolio}
                 placeholder="https://drive.google.com/…"
-                hint="Rekam jejak organisasi, proyek yang dipimpin, atau penghargaan. Pastikan akses tautan terbuka."
+                hint="Your organizational track record, projects you have led, or awards. Make sure the link is publicly accessible."
               />
             </SectionCard>
 
             <SectionCard
               no="04"
-              title="Uji visi & solusi"
-              desc={waitlist ? 'Opsional selama daftar tunggu. Kamu bisa melengkapinya saat batch dibuka.' : 'Wajib, masing-masing minimal 100 kata.'}
+              title="Vision & solutions"
+              desc={waitlist ? 'Optional while on the waitlist. You can complete them when the batch opens.' : 'Required, at least 100 words each.'}
             >
               <TextAreaField
                 tone={tone}
                 id="esai1"
-                label="Rencana strategis divisimu dalam 6 bulan pertama"
+                label="Your strategic plan for your division in the first 6 months"
                 required={!waitlist}
-                hint="Uraikan prioritas, target terukur, dan langkah awal untuk posisi yang kamu pilih."
+                hint="Describe your priorities, measurable targets, and first steps for the position you chose."
                 value={v.esai1}
                 onChange={(x) => set('esai1', x)}
                 error={err.esai1}
@@ -205,9 +188,9 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
               <TextAreaField
                 tone={tone}
                 id="esai2"
-                label="Bagaimana kamu menerapkan nilai Solutioner dan Synergy saat tim menghadapi masalah?"
+                label="How do you apply the Solutioner and Synergy values when your team faces a problem?"
                 required={!waitlist}
-                hint="Ceritakan satu situasi nyata: masalahnya, peranmu, dan hasilnya."
+                hint="Tell us about one real situation, including the problem, your role, and the result."
                 value={v.esai2}
                 onChange={(x) => set('esai2', x)}
                 error={err.esai2}
@@ -215,10 +198,9 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
               />
             </SectionCard>
 
-            <SectionCard no="05" title="Konfirmasi komitmen waktu" desc="Peran BOD menuntut keterlibatan rutin setiap minggu.">
+            <SectionCard no="05" title="Time commitment" desc="The BoD role requires regular involvement every week.">
               <ConsentCheckbox tone={tone} id="komitmen" checked={v.komitmen} onChange={(x) => set('komitmen', x)} error={err.komitmen}>
-                Saya bersedia meluangkan <strong>minimal 15–20 jam per minggu</strong> untuk menjalankan peran ini selama masa
-                jabatan.
+                I am willing to commit <strong>at least 15–20 hours per week</strong> to this role throughout my term.
               </ConsentCheckbox>
             </SectionCard>
 
@@ -229,7 +211,7 @@ export function BodForm({ status }: { status: RecruitmentStatus }) {
                 disabled={form.submitting}
                 className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded bg-forest px-6 font-bold text-white transition hover:bg-brand disabled:opacity-60 sm:ml-auto"
               >
-                {waitlist ? 'Submit' : 'Kirim lamaran'}
+                {waitlist ? 'Submit' : 'Submit application'}
                 <ArrowRight className="size-[18px]" aria-hidden />
               </button>
             </div>

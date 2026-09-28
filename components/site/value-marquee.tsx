@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Handshake, Infinity as InfinityIcon, Lightbulb, Smile, Sunrise, Users, type LucideIcon } from 'lucide-react';
 import { coreValues } from '@/lib/content';
+import { T } from '@/lib/i18n';
 
 // Ikon pengganti foto, urut sesuai coreValues.
 const icons: LucideIcon[] = [Sunrise, Lightbulb, Smile, Handshake, Users, InfinityIcon];
@@ -65,7 +66,9 @@ function ValueCard({
         <h3 className="text-lg font-extrabold leading-tight text-forest">{value.title}</h3>
         <div className="value-desc">
           <p className="overflow-hidden text-[14px] leading-relaxed text-ink">
-            <span className="block pt-2">{value.desc}</span>
+            <span className="block pt-2">
+              <T v={value.desc} />
+            </span>
           </p>
         </div>
       </div>
