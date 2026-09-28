@@ -20,11 +20,12 @@ export function VisionCard() {
             <T id="VISI" en="VISION" />
           </span>
 
-          <p className="text-2xl font-bold leading-snug tracking-tight sm:text-[30px]">
-            <T id="Menjadi wadah pemuda yang melahirkan" en="To be a home for young people that raises" />
+          {/* Visi resmi ThreeL selalu dalam bahasa Inggris, apa pun bahasa yang dipilih pengunjung. */}
+          <p lang="en" className="text-2xl font-bold leading-snug tracking-tight sm:text-[30px]">
+            To be a youth-driven community rooted in care and synergy,
             <span className="relative mx-auto my-3 block w-fit">
-              <span className="block -skew-x-6 bg-gradient-to-r from-[#B7E4C7] via-[#5FBF94] to-[#8FD3B6] bg-clip-text pr-1 text-[26px] font-extrabold italic leading-tight tracking-tight text-transparent sm:text-[38px] lg:text-[46px]">
-                #ShapingChangemakers
+              <span className="block -skew-x-6 bg-gradient-to-r from-[#B7E4C7] via-[#5FBF94] to-[#8FD3B6] bg-clip-text pr-1 text-[28px] font-extrabold italic leading-tight tracking-tight text-transparent sm:text-[40px] lg:text-[48px]">
+                shaping changemakers
               </span>
               {/* Sapuan kuas di bawah frasa kunci, tergambar saat kartu muncul. */}
               <svg aria-hidden viewBox="0 0 300 16" preserveAspectRatio="none" className="brush absolute -bottom-2 left-0 h-3.5 w-full">
@@ -37,10 +38,7 @@ export function VisionCard() {
                 <path d="M3 11C80 5 190 3 297 6" pathLength={1} stroke="url(#brush-grad)" strokeWidth="6" strokeLinecap="round" fill="none" />
               </svg>
             </span>
-            <T
-              id="bagi Indonesia yang bebas dari kemiskinan, melalui pendidikan, teknologi, dan pemberdayaan sosial."
-              en="for a poverty-free Indonesia, through education, technology, and social empowerment."
-            />
+            through educational innovation, applied technology, and environmental sustainability.
           </p>
         </div>
       </Container>

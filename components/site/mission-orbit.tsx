@@ -3,15 +3,16 @@
 import Image from 'next/image';
 import { useId, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
-import { ArrowRight, Cpu, GraduationCap, Sprout, Users, type LucideIcon } from 'lucide-react';
+import { ArrowRight, Flame, Handshake, Leaf, Lightbulb, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { missions } from '@/lib/content';
 import { useLang } from '@/lib/i18n';
 import { ScrollDrift } from '@/components/ui/scroll-motion';
 
-// Ikon misi, urut sesuai missions. Ikon menumpang di cincin pada sudut 45°, 135°, 225°, 315°
-// dan ikut berputar; titik kecil mengisi sela di 0°, 90°, 180°, 270°.
-const icons: LucideIcon[] = [GraduationCap, Cpu, Sprout, Users];
+// Ikon misi, urut sesuai missions: menempa pemuda (api tempa), solusi tepat guna (bola lampu),
+// keberlanjutan (daun), kolaborasi multi-pihak (jabat tangan). Ikon menumpang di cincin pada sudut
+// 45°, 135°, 225°, 315° dan ikut berputar; titik kecil mengisi sela di 0°, 90°, 180°, 270°.
+const icons: LucideIcon[] = [Flame, Lightbulb, Leaf, Handshake];
 const ICON_DEG = [225, 315, 135, 45];
 
 const R = 190; // jari-jari cincin (ruang SVG 440x440)
@@ -123,6 +124,7 @@ function MissionCards({ active, toggle }: Props) {
     <ul className="grid grid-cols-2 gap-5">
       {missions.map((m, i) => {
         const on = active === i;
+        const Icon = icons[i];
         return (
           <li key={m.label.id}>
             <motion.button
@@ -133,7 +135,7 @@ function MissionCards({ active, toggle }: Props) {
               initial={false}
               animate={{ opacity: active !== null && !on ? 0.6 : 1 }}
               className={cn(
-                'group relative block h-[230px] w-full overflow-hidden rounded-[24px] text-left shadow-[0_18px_40px_-20px_rgba(11,59,46,0.55)] outline-none ring-offset-2 transition-shadow duration-300 focus-visible:ring-4 focus-visible:ring-brand/40',
+                'group relative block h-[280px] w-full overflow-hidden rounded-[24px] text-left shadow-[0_18px_40px_-20px_rgba(11,59,46,0.55)] outline-none ring-offset-2 transition-shadow duration-300 focus-visible:ring-4 focus-visible:ring-brand/40',
                 on && 'ring-[3px] ring-gold',
               )}
             >
@@ -147,8 +149,20 @@ function MissionCards({ active, toggle }: Props) {
                 className="absolute inset-0 block bg-forest/55"
               />
 
+              {/* Ikon misi yang sama dengan di cincin, supaya kartu dan cincin terasa satu kesatuan. */}
+              <span
+                aria-hidden
+                className={cn(
+                  'absolute left-4 top-4 flex size-10 items-center justify-center rounded-full transition-colors duration-300',
+                  on ? 'bg-gold text-forest' : 'bg-white/90 text-brand',
+                )}
+              >
+                <Icon className="size-5" strokeWidth={1.9} />
+              </span>
+
               <span className="absolute inset-x-0 bottom-0 flex flex-col p-4">
-                <span className="text-lg font-extrabold leading-snug text-white">{t(m.label)}</span>
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-gold">{m.tagline}</span>
+                <span className="mt-1 text-[17px] font-extrabold leading-snug text-white">{t(m.label)}</span>
                 <AnimatePresence initial={false}>
                   {on ? (
                     <motion.span
@@ -157,9 +171,9 @@ function MissionCards({ active, toggle }: Props) {
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.4, ease }}
-                      className="block overflow-hidden text-[14px] leading-relaxed text-white/90"
+                      className="block overflow-hidden text-[13.5px] leading-relaxed text-white/90"
                     >
-                      <span className="block pt-3">{t(m.text)}</span>
+                      <span className="block pt-2.5">{t(m.text)}</span>
                     </motion.span>
                   ) : null}
                 </AnimatePresence>
@@ -197,8 +211,11 @@ function MissionList({ active, toggle }: Props) {
               >
                 <span className="flex items-center gap-4">
                   <span className="w-6 shrink-0 font-mono text-xs font-semibold text-white/60">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="flex-1 text-[22px] font-extrabold uppercase leading-tight tracking-tight text-white sm:text-3xl">
-                    {t(m.label)}
+                  <span className="flex flex-1 flex-col gap-1">
+                    <span className="text-[19px] font-extrabold uppercase leading-tight tracking-tight text-white sm:text-2xl">
+                      {t(m.label)}
+                    </span>
+                    <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-gold">{m.tagline}</span>
                   </span>
                   <motion.span
                     initial={false}

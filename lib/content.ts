@@ -496,39 +496,46 @@ export const lookLearnLead: Array<{ no: string; title: 'Look' | 'Learn' | 'Lead'
   },
 ];
 
-/** `label` tampil di kartu misi, `text` muncul sebagai penjelasan saat kartu dipilih, `image` jadi latarnya. */
-export const missions: Array<{ label: Bi; text: Bi; image: string }> = [
+/**
+ * Misi ThreeL. `label` judul misi, `tagline` subjudul bahasa Inggris (nama resmi misi),
+ * `text` penjelasan yang muncul saat kartu dipilih, `image` jadi latarnya.
+ */
+export const missions: Array<{ label: Bi; tagline: string; text: Bi; image: string }> = [
   {
-    label: { id: 'Pendidikan', en: 'Education' },
+    label: { id: 'Menempa Kapasitas Pemuda', en: 'Building Youth Capacity' },
+    tagline: 'Shaping Changemakers',
     text: {
-      id: 'Membuka akses pendidikan yang berkualitas bagi siswa dari keluarga prasejahtera.',
-      en: 'Opening access to quality education for students from low-income families.',
+      id: 'Membangun ekosistem pembinaan yang sehat dan inklusif guna mencetak kader muda yang berkarakter, berdaya nalar kritis, dan tangguh dalam menghadapi tantangan sosial.',
+      en: 'Building a healthy and inclusive mentoring ecosystem that raises young leaders of strong character, critical thinking, and resilience in the face of social challenges.',
     },
     image: '/images/misi/pendidikan.webp',
   },
   {
-    label: { id: 'Kepemimpinan & Teknologi', en: 'Leadership & Technology' },
+    label: { id: 'Menghadirkan Solusi Tepat Guna', en: 'Delivering Practical Solutions' },
+    tagline: 'Solution-Oriented Innovation',
     text: {
-      id: 'Mengembangkan kepemimpinan dan keterampilan teknologi pemuda.',
-      en: 'Developing young people’s leadership and technology skills.',
+      id: 'Mengembangkan program pendidikan alternatif dan rekayasa teknologi aplikatif yang menjawab kebutuhan dasar masyarakat di bidang pendidikan, energi, dan kesehatan.',
+      en: 'Developing alternative education programs and applied technology that answer people’s basic needs in education, energy, and health.',
     },
     image: '/images/misi/kepemimpinan-teknologi.webp',
   },
   {
-    label: { id: 'Aksi Sosial', en: 'Social Action' },
+    label: { id: 'Mendorong Keberlanjutan Lingkungan dan Sosial', en: 'Driving Environmental and Social Sustainability' },
+    tagline: 'Sustainable Impact',
     text: {
-      id: 'Menjalankan aksi sosial, kesehatan, dan lingkungan yang terukur serta berkelanjutan.',
-      en: 'Running measurable and sustainable social, health, and environmental action.',
-    },
-    image: '/images/misi/aksi-sosial.webp',
-  },
-  {
-    label: { id: 'Kolaborasi', en: 'Collaboration' },
-    text: {
-      id: 'Membangun kolaborasi lintas sektor bersama korporasi, instansi, kampus, dan komunitas.',
-      en: 'Building cross-sector collaboration with companies, institutions, universities, and communities.',
+      id: 'Menginisiasi gerakan sosial yang berorientasi pada pelestarian lingkungan, peningkatan kualitas hidup masyarakat rentan, serta pencapaian Tujuan Pembangunan Berkelanjutan (SDGs).',
+      en: 'Initiating social movements focused on environmental conservation, better quality of life for vulnerable communities, and the Sustainable Development Goals (SDGs).',
     },
     image: '/images/misi/kolaborasi.webp',
+  },
+  {
+    label: { id: 'Membangun Kolaborasi Multi-Pihak', en: 'Building Multi-Stakeholder Collaboration' },
+    tagline: 'Strategic Synergy',
+    text: {
+      id: 'Menjalin kemitraan yang setara dan berkelanjutan dengan pemerintah, akademisi, sektor swasta, dan komunitas untuk memperluas jangkauan dampak positif.',
+      en: 'Forming equal and lasting partnerships with government, academia, the private sector, and communities to widen the reach of positive impact.',
+    },
+    image: '/images/misi/aksi-sosial.webp',
   },
 ];
 

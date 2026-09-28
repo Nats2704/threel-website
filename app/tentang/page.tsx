@@ -58,7 +58,18 @@ export default function TentangPage() {
                 <SectionHeading
                   id="misi-title"
                   eyebrow={<T id="Misi" en="Mission" />}
-                  title={<T id="Empat langkah menuju visi itu." en="Four steps toward that vision." />}
+                  title={
+                    <T
+                      id="Empat misi untuk mencetak changemakers muda."
+                      en="Four missions to shape young changemakers."
+                    />
+                  }
+                  aside={
+                    <T
+                      id="Dari menempa kapasitas pemuda sampai kolaborasi multi-pihak. Ketuk salah satu misi untuk membaca penjelasannya."
+                      en="From building youth capacity to multi-stakeholder collaboration. Tap a mission to read what it means."
+                    />
+                  }
                 />
               </ScrollDrift>
             </Reveal>
