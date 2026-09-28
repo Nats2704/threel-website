@@ -7,7 +7,7 @@ export function LogoWordmark({ className, priority }: { className?: string; prio
     <Image
       src="/images/logo-threel-wordmark.webp"
       alt="ThreeL Community"
-      width={1415}
+      width={1454}
       height={528}
       className={cn('w-auto shrink-0 object-contain', className)}
       priority={priority}
