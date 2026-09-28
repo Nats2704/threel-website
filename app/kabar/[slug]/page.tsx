@@ -54,7 +54,8 @@ export default async function KabarDetailPage({ params }: Params) {
           src={item.cover}
           credit={item.coverCredit}
           size="lg"
-          className="aspect-[16/9] min-h-72"
+          // Tanpa min-h: aspect-ratio + min-height membuat lebar minimum 512px dan foto keluar dari layar HP.
+          className="aspect-[16/9] w-full min-w-0"
         />
         <div className="flex flex-col gap-4 text-[17px] leading-[1.8] text-ink">
           <p>

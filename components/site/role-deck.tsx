@@ -145,7 +145,11 @@ const RADIUS = 28;
 const SKEW = -8;
 const EASE = [0.22, 1, 0.36, 1] as const;
 // Isi kartu di rak memudar masuk setelah kartu selesai kembali ke tempatnya.
-const settleIn = { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.2, duration: 0.35, ease: EASE } };
+const settleIn = { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.38, duration: 0.35, ease: EASE } };
+// Pegas untuk perpindahan kartu antara rak dan panggung: tanpa pantulan, supaya kartu besar mendarat tenang.
+const MORPH = { type: 'spring', visualDuration: 0.62, bounce: 0 } as const;
+// Lama isi kartu terbuka memudar sebelum kartu kembali ke rak.
+const FADE_OUT_MS = 180;
 
 /** Nomor opsi dalam lencana kecil, diikuti nama jalurnya. */
 function OptionTag({ role, className }: { role: Role; className?: string }) {
@@ -185,6 +189,7 @@ function RackCard({
       animate={{ skewY: SKEW }}
       whileHover={{ y: -16 }}
       whileFocus={{ y: -16 }}
+      transition={{ layout: MORPH, skewY: MORPH, y: { type: 'spring', stiffness: 320, damping: 26 } }}
       style={{ borderRadius: RADIUS }}
       className={cn(
         'group flex cursor-pointer flex-col justify-between border p-5 text-left shadow-[0_20px_40px_-28px_rgba(11,59,46,0.55)] transition-[filter] duration-500 [grid-area:stack] sm:p-6',
@@ -214,17 +219,29 @@ function RackCard({
   );
 }
 
-function OpenCard({ role, onClose, ref }: { role: Role; onClose: () => void; ref?: React.Ref<HTMLElement> }) {
+function OpenCard({
+  role,
+  closing,
+  onClose,
+  ref,
+}: {
+  role: Role;
+  closing: boolean;
+  onClose: () => void;
+  ref?: React.Ref<HTMLElement>;
+}) {
   const t = role.theme;
   const Icon = role.icon;
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => heading.current?.focus({ preventScroll: true }), []);
 
-  // Detail muncul bertahap setelah kartu mendarat, dan hilang cepat sebelum kartu kembali ke rak.
+  // Detail muncul bertahap setelah kartu mendarat, dan memudar lebih dulu saat kartu akan kembali ke rak.
+  // Hanya opacity + posisi (tanpa filter blur) supaya tetap mulus di HP.
   const reveal = (i: number) => ({
-    initial: { opacity: 0, y: 12, filter: 'blur(6px)' },
-    animate: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { delay: 0.22 + i * 0.06, duration: 0.45, ease: EASE } },
-    exit: { opacity: 0, y: 6, filter: 'blur(4px)', transition: { duration: 0.15, ease: EASE } },
+    initial: { opacity: 0, y: 10 },
+    animate: closing
+      ? { opacity: 0, y: 4, transition: { duration: FADE_OUT_MS / 1000, ease: EASE } }
+      : { opacity: 1, y: 0, transition: { delay: 0.3 + i * 0.05, duration: 0.4, ease: EASE } },
   });
 
   return (
@@ -233,7 +250,9 @@ function OpenCard({ role, onClose, ref }: { role: Role; onClose: () => void; ref
       layoutId={`role-${role.id}`}
       initial={{ skewY: SKEW }}
       animate={{ skewY: 0 }}
-      exit={{ skewY: SKEW, opacity: 0, transition: { opacity: { delay: 0.1, duration: 0.3, ease: EASE } } }}
+      // Hilang seketika: kartu di rak yang mengambil alih dan terbang kembali, jadi tidak ada dua kartu bertumpuk.
+      exit={{ opacity: 0, transition: { duration: 0 } }}
+      transition={{ layout: MORPH, skewY: MORPH }}
       style={{ borderRadius: RADIUS }}
       className={cn(
         'relative z-10 flex w-full flex-col gap-5 border p-7 shadow-[0_40px_80px_-40px_rgba(11,59,46,0.55)] sm:p-9',
@@ -312,6 +331,8 @@ export function RoleDeck({
 }) {
   const roles = buildRoles(bod, associate, member);
   const [openId, setOpenId] = useState<RoleId | null>(null);
+  const [closing, setClosing] = useState(false);
+  const closeTimer = useRef<number | undefined>(undefined);
   const mounted = useRef(false);
   const stage = useRef<HTMLDivElement>(null);
   const buttons = useRef<Partial<Record<RoleId, HTMLButtonElement | null>>>({});
@@ -319,6 +340,7 @@ export function RoleDeck({
 
   useEffect(() => {
     mounted.current = true;
+    return () => window.clearTimeout(closeTimer.current);
   }, []);
 
   useEffect(() => {
@@ -327,15 +349,27 @@ export function RoleDeck({
   }, [openId]);
 
   const open = (id: RoleId) => {
+    window.clearTimeout(closeTimer.current);
+    setClosing(false);
     returning.current = null;
     setOpenId(id);
     if (window.innerWidth < 1024) {
       requestAnimationFrame(() => stage.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
     }
   };
+  // Tutup dua tahap: isi kartu memudar dulu, baru kartunya terbang kembali ke rak.
   const close = () => {
-    returning.current = openId;
-    setOpenId(null);
+    if (closing || openId === null) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setClosing(true);
+    closeTimer.current = window.setTimeout(
+      () => {
+        returning.current = openId;
+        setOpenId(null);
+        setClosing(false);
+      },
+      reduce ? 0 : FADE_OUT_MS,
+    );
   };
 
   const openRole = roles.find((r) => r.id === openId);
@@ -343,7 +377,7 @@ export function RoleDeck({
   const frontId = closed[closed.length - 1]?.id;
 
   return (
-    <MotionConfig reducedMotion="user" transition={{ type: 'spring', visualDuration: 0.6, bounce: 0.12 }}>
+    <MotionConfig reducedMotion="user" transition={MORPH}>
       <LayoutGroup>
         <div className="flex flex-col items-center lg:flex-row lg:items-center lg:justify-center">
           <motion.div layout="position" className="flex flex-col items-center gap-8">
@@ -379,7 +413,7 @@ export function RoleDeck({
             )}
           >
             <AnimatePresence mode="popLayout">
-              {openRole ? <OpenCard key={openRole.id} role={openRole} onClose={close} /> : null}
+              {openRole ? <OpenCard key={openRole.id} role={openRole} closing={closing} onClose={close} /> : null}
             </AnimatePresence>
           </div>
         </div>

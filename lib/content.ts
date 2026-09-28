@@ -1026,7 +1026,7 @@ export const partnerSteps: Array<{ no: string; title: Bi; desc: Bi }> = [
   },
 ];
 
-export type NewsCategory = 'artikel' | 'rilis' | 'arsip';
+export type NewsCategory = 'berita' | 'artikel' | 'rilis' | 'arsip';
 
 export type NewsItem = {
   slug: string;
@@ -1043,6 +1043,7 @@ export type NewsItem = {
 };
 
 export const newsCategories: Record<NewsCategory, { label: Bi; cta: Bi }> = {
+  berita: { label: { id: 'Berita', en: 'News' }, cta: { id: 'Baca berita', en: 'Read news' } },
   artikel: { label: { id: 'Artikel', en: 'Article' }, cta: { id: 'Baca artikel', en: 'Read article' } },
   rilis: { label: { id: 'Rilis Pers', en: 'Press Release' }, cta: { id: 'Baca rilis', en: 'Read release' } },
   arsip: { label: { id: 'Arsip Publikasi', en: 'Publication Archive' }, cta: { id: 'Lihat dokumen', en: 'View document' } },
@@ -1151,6 +1152,21 @@ export const news: NewsItem[] = [
     program: { id: 'Dokumen kemitraan', en: 'Partnership document' },
     date: draftDate,
     excerpt: { id: '[Ringkasan profil organisasi.]', en: '[Organization profile summary.]' },
+  },
+  {
+    slug: 'threel-berkelana-jelajah-literasi',
+    cover: '/images/kabar/threel-berkelana-jelajah-literasi.webp',
+    category: 'berita',
+    title: {
+      id: 'ThreeL Berkelana membawa [jumlah] buku ke [lokasi]',
+      en: 'ThreeL Berkelana brings [number] books to [location]',
+    },
+    program: { id: 'ThreeL Berkelana', en: 'ThreeL Berkelana' },
+    date: draftDate,
+    excerpt: {
+      id: '[Ringkasan berita: jumlah anak yang ikut membaca, relawan yang terlibat, dan rencana kunjungan berikutnya.]',
+      en: '[News summary: how many children joined the reading session, the volunteers involved, and the next visit.]',
+    },
   },
 ];
 

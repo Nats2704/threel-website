@@ -10,6 +10,7 @@ Unsplash, dipakai di bawah Unsplash License (https://unsplash.com/license):
 - laporan-dampak-semester.webp: UX Indonesia, https://unsplash.com/photos/hv2DRoXTKxI
 - kesehatan-mental-remaja-threel-hope.webp: Umar ben, https://unsplash.com/photos/a-OQDpaoM0A
 - profil-organisasi.webp: Rendy Novantino, Yogyakarta, https://unsplash.com/photos/Nb__Sl4Biz0
+- threel-berkelana-jelajah-literasi.webp: styvo Putra Sid, Payakumbuh, https://unsplash.com/photos/Vs0KoJbwG0w
 
 Wikimedia Commons (kredit ditampilkan di atas foto):
 

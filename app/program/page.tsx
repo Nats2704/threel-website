@@ -38,7 +38,7 @@ export default function ProgramPage() {
         </nav>
       </PageHeader>
 
-      <section id="unggulan" aria-labelledby="pilar-title" className="scroll-mt-20 py-20 lg:py-24">
+      <section id="unggulan" aria-labelledby="pilar-title" className="scroll-mt-20 overflow-x-clip py-20 lg:py-24">
         <Container className="flex flex-col gap-12">
           <SectionHeading
             id="pilar-title"

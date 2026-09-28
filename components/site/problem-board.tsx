@@ -22,11 +22,23 @@ const TILT = [-5, 4, -3];
 // Kemiringan foto polaroid, berlawanan arah dengan catatannya supaya terlihat ditempel terpisah.
 const PHOTO_TILT = [9, -7, 7];
 
-/** Garis putus-putus yang menyambungkan catatan, hanya di layar lebar. */
+/**
+ * Garis putus-putus yang menyambungkan catatan. Pola garisnya bergerak menyusuri jalur
+ * (kelas `dash-march`), jadi terasa seperti alur yang mengalir dari satu catatan ke berikutnya.
+ */
 function Connector({ className, d }: { className: string; d: string }) {
   return (
-    <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className={cn('pointer-events-none absolute hidden lg:block', className)}>
-      <path d={d} fill="none" stroke="#B8C6BF" strokeWidth="2" strokeDasharray="7 7" vectorEffect="non-scaling-stroke" />
+    <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className={cn('pointer-events-none absolute', className)}>
+      <path
+        d={d}
+        fill="none"
+        stroke="#A9BAB2"
+        strokeWidth="2"
+        strokeDasharray="7 7"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+        className="dash-march"
+      />
     </svg>
   );
 }
@@ -66,34 +78,34 @@ function Note({ p, index, onOpen }: { p: Problem; index: number; onOpen: (el: HT
       aria-haspopup="dialog"
       onClick={(e) => onOpen(e.currentTarget)}
       style={{ '--tilt': `${TILT[index]}deg` } as React.CSSProperties}
-      className="group relative block w-full rotate-[calc(var(--tilt)*0.5)] rounded-[30px] bg-white p-3.5 pt-12 text-left shadow-[0_22px_40px_-22px_rgba(11,59,46,0.45)] transition-[rotate,translate,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:rotate-0 hover:shadow-[0_30px_50px_-22px_rgba(11,59,46,0.5)] sm:p-4 sm:pt-14 lg:rotate-[var(--tilt)]"
+      className="group relative block w-full rotate-[calc(var(--tilt)*0.6)] rounded-[24px] bg-white p-2.5 pt-9 text-left sm:rounded-[30px] shadow-[0_22px_40px_-22px_rgba(11,59,46,0.45)] transition-[rotate,translate,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:rotate-0 hover:shadow-[0_30px_50px_-22px_rgba(11,59,46,0.5)] sm:p-4 sm:pt-14 lg:rotate-[var(--tilt)]"
     >
       <PinHead
         tone={p.tone}
-        className="absolute left-1/2 top-3.5 -translate-x-1/2 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:rotate-0 sm:top-4"
+        className="absolute left-1/2 top-2 -translate-x-1/2 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:rotate-0 max-sm:size-6 sm:top-4"
       />
       {/* Foto polaroid yang ditempel menimpa sudut kanan atas catatan. */}
       <span
         aria-hidden
         style={{ rotate: `${PHOTO_TILT[index]}deg` }}
-        className="absolute -right-3 -top-6 z-10 w-[32%] max-w-[132px] bg-white p-1.5 pb-5 shadow-[0_14px_26px_-12px_rgba(11,59,46,0.55)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1 group-hover:scale-[1.03] sm:-right-6 sm:-top-8 sm:p-2 sm:pb-7"
+        className="absolute -right-2 -top-5 z-10 w-[30%] max-w-[92px] bg-white p-1 pb-3.5 sm:max-w-[132px] shadow-[0_14px_26px_-12px_rgba(11,59,46,0.55)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1 group-hover:scale-[1.03] sm:-right-6 sm:-top-8 sm:p-2 sm:pb-7"
       >
-        <span className="absolute -top-2.5 left-1/2 h-5 w-14 -translate-x-1/2 -rotate-3 bg-[#F4EFD9]/80 shadow-[0_1px_2px_rgba(0,0,0,0.12)]" />
+        <span className="absolute -top-2 left-1/2 h-4 w-10 -translate-x-1/2 -rotate-3 sm:-top-2.5 sm:h-5 sm:w-14 bg-[#F4EFD9]/80 shadow-[0_1px_2px_rgba(0,0,0,0.12)]" />
         <span className="relative block aspect-[4/5] overflow-hidden bg-mint-deep">
           <Image src={p.photo} alt="" fill sizes="132px" className="object-cover" />
         </span>
       </span>
-      <span className={cn('flex flex-col gap-3 rounded-[22px] border p-6 sm:p-7', tone.panel)}>
+      <span className={cn('flex flex-col gap-2 rounded-[18px] border p-4 sm:gap-3 sm:rounded-[22px] sm:p-7', tone.panel)}>
         {/* Ruang kanan dikosongkan untuk foto yang menimpa. */}
         <span className={cn('flex flex-col gap-0.5 pr-[30%] font-hand font-bold leading-none sm:pr-[28%]', tone.accent)}>
-          <span className="text-5xl sm:text-6xl">{p.no}</span>
-          <span className="text-[28px] leading-[1.05] sm:text-[32px]">{t(p.label)}</span>
+          <span className="text-4xl sm:text-6xl">{p.no}</span>
+          <span className="text-[22px] leading-[1.05] sm:text-[32px]">{t(p.label)}</span>
         </span>
-        <span className="pt-2 text-[44px] font-extrabold leading-none tracking-[-0.04em] text-forest sm:text-[52px]">
+        <span className="pt-1 text-[32px] font-extrabold leading-none tracking-[-0.04em] text-forest sm:pt-2 sm:text-[52px]">
           {t(p.value)}
         </span>
-        <span className="text-base leading-relaxed text-ink">{t(p.statement)}</span>
-        <span className={cn('flex items-center gap-1.5 pt-1 text-sm font-bold', tone.accent)}>
+        <span className="text-[13px] leading-relaxed text-ink sm:text-base">{t(p.statement)}</span>
+        <span className={cn('flex items-center gap-1.5 text-xs font-bold sm:pt-1 sm:text-sm', tone.accent)}>
           {t('Baca selengkapnya', 'Read the full story')}
           <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
         </span>
@@ -219,21 +231,27 @@ export function ProblemBoard() {
 
   return (
     <>
-      <ol className="grid gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-x-[12%] lg:gap-y-0 lg:pb-8">
+      <ol className="grid gap-12 sm:gap-14 lg:grid-cols-2 lg:gap-x-[12%] lg:gap-y-0 lg:pb-8">
         {problems.map((p, i) => (
           <li
             key={p.no}
             className={cn(
               'relative',
-              // HP: catatan bergantian menepi kiri-kanan agar tetap terasa zig-zag.
-              i % 2 === 0 ? 'mr-4 sm:mr-24 lg:mr-0' : 'ml-4 sm:ml-24 lg:ml-0',
+              // HP & tablet: catatan lebih kecil dan bergantian kiri-kanan, seperti versi desktop.
+              'w-[82%] sm:w-[68%] lg:w-auto',
+              i % 2 === 1 && 'justify-self-end lg:justify-self-auto',
               i === 1 && 'lg:mt-48',
               i === 2 && 'lg:-mt-24',
             )}
           >
-            {i === 0 ? <Connector className="left-[96%] top-[48%] h-[200px] w-[38%]" d="M0,0 C45,0 72,38 100,100" /> : null}
-            {i === 1 ? <Connector className="right-[97%] top-[80%] h-[170px] w-[36%]" d="M100,0 C60,18 25,45 12,100" /> : null}
             <Reveal delay={i * 120}>
+              {/* Garis ada di dalam Reveal supaya muncul bersamaan dengan catatannya, tidak melayang lebih dulu. */}
+              {/* Desktop: garis ke samping menuju catatan di kolom sebelah. */}
+              {i === 0 ? <Connector className="left-[96%] top-[48%] hidden h-[200px] w-[38%] lg:block" d="M0,0 C45,0 72,38 100,100" /> : null}
+              {i === 1 ? <Connector className="right-[97%] top-[80%] hidden h-[170px] w-[36%] lg:block" d="M100,0 C60,18 25,45 12,100" /> : null}
+              {/* HP & tablet: garis turun menyilang ke catatan berikutnya di sisi seberang. */}
+              {i === 0 ? <Connector className="left-[70%] top-[78%] h-[calc(22%+3.5rem)] w-[26%] lg:hidden" d="M0,0 C70,5 95,45 88,100" /> : null}
+              {i === 1 ? <Connector className="right-[70%] top-[78%] h-[calc(22%+3.5rem)] w-[26%] lg:hidden" d="M100,0 C30,5 5,45 12,100" /> : null}
               <Note
                 p={p}
                 index={i}

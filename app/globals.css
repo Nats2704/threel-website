@@ -266,6 +266,15 @@ body {
   background-image: repeating-linear-gradient(90deg, rgb(255 255 255 / 0.55) 0 16px, transparent 16px 28px);
   animation: dash-flow 1.6s linear infinite;
 }
+/* Garis putus-putus SVG yang "berjalan" menyusuri jalurnya (panjang pola 7+7 = 14). */
+@keyframes dash-march {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+.dash-march {
+  animation: dash-march 1.4s linear infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -274,6 +283,7 @@ body {
   .rise,
   .float-soft,
   .dash-flow,
+  .dash-march,
   .value-track,
   .partner-track,
   .chief-blob,
