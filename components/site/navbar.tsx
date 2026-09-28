@@ -19,7 +19,7 @@ import {
 import { cn } from '@/lib/cn';
 import { useLang, type Bi } from '@/lib/i18n';
 import { LangSwitch, LangToggle } from './lang-switch';
-import { LogoMark } from './logo';
+import { LogoWordmark } from './logo';
 
 const links: { href: string; label: Bi; icon: LucideIcon }[] = [
   { href: '/tentang', label: { id: 'Tentang Kami', en: 'About Us' }, icon: Sprout },
@@ -83,14 +83,10 @@ export function Navbar() {
           <Link
             href="/"
             aria-label={t('ThreeL Community, kembali ke beranda', 'ThreeL Community, back to home')}
-            className="flex items-center gap-3 text-forest"
+            className="flex items-center"
           >
-            <LogoMark size={52} />
-            {/* Layar sangat sempit: cukup logo, supaya tombol bahasa, Daftar, dan menu tetap muat. */}
-            <span className="hidden flex-col leading-tight min-[370px]:flex">
-              <span className="text-lg font-extrabold tracking-tight">ThreeL</span>
-              <span className="text-[11px] font-bold tracking-[0.16em] text-muted">COMMUNITY</span>
-            </span>
+            {/* Logo lengkap cukup ramping (±107px di HP), jadi tombol bahasa, Daftar, dan menu tetap muat. */}
+            <LogoWordmark priority className="h-10 lg:h-12" />
           </Link>
 
           <nav

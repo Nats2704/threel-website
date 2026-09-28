@@ -3,7 +3,7 @@ import { Mail } from 'lucide-react';
 import { contact } from '@/lib/content';
 import { T, type Bi } from '@/lib/i18n';
 import { InstagramIcon } from '@/components/ui/icons';
-import { LogoMark } from './logo';
+import { LogoWordmark } from './logo';
 import { NewsletterForm } from './footer-controls';
 
 const quickLinks: { href: string; label: Bi }[] = [
@@ -38,14 +38,8 @@ export function Footer() {
               aria-hidden
               className="pointer-events-none absolute -top-16 left-1/2 size-72 -translate-x-1/2 lg:-left-16 lg:translate-x-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.9),transparent_62%)] blur-2xl lg:size-80"
             />
-            <Link href="/" aria-label="ThreeL Community" className="relative flex w-fit items-center gap-3 text-left text-forest lg:gap-4">
-              <span className="size-[88px] shrink-0 lg:-ml-3 lg:size-[112px] [&>img]:size-full">
-                <LogoMark size={112} />
-              </span>
-              <span className="flex flex-col leading-none">
-                <span className="text-[28px] font-extrabold tracking-tight lg:text-[36px]">ThreeL</span>
-                <span className="mt-1.5 text-xs font-bold tracking-[0.22em] text-muted lg:text-[13px]">COMMUNITY</span>
-              </span>
+            <Link href="/" className="relative flex w-fit">
+              <LogoWordmark className="h-20 lg:h-[92px]" />
             </Link>
             <p className="relative max-w-[320px] text-base leading-relaxed text-muted lg:text-xl">
               <T
