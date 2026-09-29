@@ -1,33 +1,29 @@
 'use client';
 
-import Image from 'next/image';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion, type PanInfo } from 'motion/react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { cLevels } from '@/lib/content';
 import { useLang } from '@/lib/i18n';
 
-// Posisi kartu di tumpukan menurut jaraknya dari kartu aktif (0 = paling depan).
-const STACK = [
-  { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1, zIndex: 3, filter: 'saturate(1) brightness(1)' },
-  { x: 30, y: -22, rotate: 5, scale: 0.92, opacity: 1, zIndex: 2, filter: 'saturate(0.7) brightness(0.96)' },
-  { x: -30, y: -30, rotate: -5, scale: 0.86, opacity: 1, zIndex: 1, filter: 'saturate(0.5) brightness(0.93)' },
-];
-const HIDDEN = { x: 0, y: -40, rotate: 0, scale: 0.8, opacity: 0, zIndex: 0, filter: 'saturate(0.5) brightness(0.93)' };
+// Posisi sosok di panggung menurut jaraknya dari yang aktif: 0 = depan, ±1 = di kiri/kanan belakang,
+// lebih jauh = menunggu di luar pandangan. Sengaja tanpa CSS `filter`: di atas latar parallax yang
+// `fixed`, Chrome menggambar kotak putih bertepi tegas di sekeliling elemen ber-filter.
+// Efek blur dikerjakan di dalam SVG (lihat ChiefFigure).
+function stagePose(rel: number) {
+  const side = Math.sign(rel);
+  const d = Math.min(Math.abs(rel), 2);
+  return [
+    { x: '0%', scale: 1, opacity: 1, zIndex: 3 },
+    { x: `${side * 48}%`, scale: 0.8, opacity: 0.8, zIndex: 2 },
+    { x: `${side * 80}%`, scale: 0.68, opacity: 0, zIndex: 1 },
+  ][d];
+}
 
 // Pegas lembut: bergerak luwes, sedikit memantul, lalu diam tanpa hentakan.
 const spring = { type: 'spring', stiffness: 120, damping: 20, mass: 0.9 } as const;
 const ease = [0.22, 1, 0.36, 1] as const;
-
-// Warna latar blur di belakang foto, satu set per pimpinan (urut sesuai cLevels).
-const palettes = [
-  ['#12805c', '#f2c94c', '#bfe3cf'],
-  ['#0f6b4f', '#8fd3b6', '#f6dd8f'],
-  ['#1d9a6c', '#e9b949', '#d6ece0'],
-  ['#0b3b2e', '#5fbf94', '#f2c94c'],
-  ['#12805c', '#b7e4c7', '#e6c86e'],
-];
 
 export function ChiefCarousel() {
   const { t } = useLang();
@@ -52,38 +48,47 @@ export function ChiefCarousel() {
           if (e.key === 'ArrowLeft') go(-1);
           if (e.key === 'ArrowRight') go(1);
         }}
-        className="grid items-center gap-12 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:gap-24"
+        className="grid items-center gap-6 sm:gap-10 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:gap-24"
       >
-        <div className="relative mx-auto aspect-[4/5] w-full max-w-[270px] sm:max-w-[320px] lg:max-w-none">
+        <div className="relative mx-auto h-[380px] w-full max-w-[340px] overflow-x-clip lg:overflow-x-visible sm:h-[500px] lg:h-[560px] lg:max-w-none">
+          {/* Bayangan lantai tipis agar sosok depan tidak terlihat melayang. */}
+          <span
+            aria-hidden
+            className="absolute -bottom-3 left-1/2 h-10 w-[70%] -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(11,59,46,0.22),transparent)]"
+          />
           {cLevels.map((c, i) => {
             const offset = (i - active + n) % n;
+            // Jarak bertanda: 1 = berikutnya (kanan), -1 = sebelumnya (kiri).
+            const rel = offset <= n / 2 ? offset : offset - n;
             return (
-              <motion.div
-                key={c.code}
-                aria-hidden={offset !== 0}
-                initial={false}
-                animate={STACK[offset] ?? HIDDEN}
-                transition={spring}
-                // Hanya kartu depan yang bisa ditarik; setelah dilepas ia meluncur ke posisi barunya di tumpukan.
-                drag={offset === 0 ? 'x' : false}
-                dragSnapToOrigin
-                dragElastic={0.7}
-                dragConstraints={{ left: 0, right: 0 }}
-                onDragEnd={onSwipe}
-                className={cn(
-                  'absolute inset-0 overflow-hidden rounded-[28px] bg-mint shadow-[0_28px_56px_-20px_rgba(11,59,46,0.4)]',
-                  offset === 0 && 'cursor-grab touch-pan-y active:cursor-grabbing',
-                )}
-              >
-                <ChiefPortrait chief={c} colors={palettes[i % palettes.length]} front={offset === 0} />
-              </motion.div>
+              <div key={c.code} className="pointer-events-none absolute inset-0 flex justify-center">
+                <motion.div
+                  aria-hidden={rel !== 0}
+                  initial={false}
+                  animate={stagePose(rel)}
+                  transition={spring}
+                  style={{ transformOrigin: '50% 100%' }}
+                  // Hanya sosok depan yang bisa ditarik; setelah dilepas ia kembali ke tengah.
+                  drag={rel === 0 ? 'x' : false}
+                  dragSnapToOrigin
+                  dragElastic={0.7}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  onDragEnd={onSwipe}
+                  className={cn(
+                    'relative aspect-[1/2] h-full',
+                    rel === 0 && 'pointer-events-auto cursor-grab touch-pan-y active:cursor-grabbing',
+                  )}
+                >
+                  <ChiefFigure chief={c} front={rel === 0} />
+                </motion.div>
+              </div>
             );
           })}
         </div>
 
         <div className="flex flex-col gap-8">
           {/* Area teks juga bisa digeser di HP; pan-y menjaga scroll vertikal halaman tetap normal. */}
-          <motion.div onPanEnd={onSwipe} aria-live="polite" className="min-h-[240px] touch-pan-y sm:min-h-[230px]">
+          <motion.div onPanEnd={onSwipe} aria-live="polite" className="min-h-[250px] touch-pan-y sm:min-h-[240px]">
             <AnimatePresence mode="wait" initial={false} custom={dir}>
               <motion.div
                 key={chief.code}
@@ -99,11 +104,19 @@ export function ChiefCarousel() {
                 transition={{ duration: 0.45, ease }}
                 className="flex flex-col gap-2"
               >
-                <span className="font-mono text-xs font-semibold tracking-[0.14em] text-gold-ink">{chief.code}</span>
-                <h3 className="text-[28px] font-extrabold leading-tight text-forest sm:text-[32px]">{chief.name}</h3>
-                <p className="text-base text-muted">{chief.title}</p>
+                {/* Di HP nama, jabatan, dan kampus rata tengah di bawah foto; di desktop rata kiri. */}
+                <div className="flex flex-col items-center gap-2 text-center lg:items-start lg:text-left">
+                  <h3 className="text-[28px] font-extrabold leading-tight text-forest sm:text-[32px]">{chief.name}</h3>
+                  <p className="text-base text-muted">{chief.title}</p>
+                  {chief.campus ? (
+                    <span className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full border border-line bg-white/70 px-3 py-1 text-sm font-semibold text-forest backdrop-blur">
+                      <GraduationCap className="size-4 text-gold-ink" strokeWidth={2} aria-hidden />
+                      {chief.campus}
+                    </span>
+                  ) : null}
+                </div>
                 <blockquote className="mt-5 text-lg leading-relaxed text-ink sm:text-xl">
-                  {t(chief.quote).split(' ').map((word, i) => (
+                  {`“${t(chief.quote)}”`.split(' ').map((word, i) => (
                     <motion.span
                       key={i}
                       initial={{ opacity: 0, y: 8, filter: 'blur(6px)' }}
@@ -131,54 +144,64 @@ export function ChiefCarousel() {
   );
 }
 
-/** Foto berlatar transparan (jas/korporat) di atas latar warna yang di-blur dan bergerak pelan. */
-function ChiefPortrait({ chief, colors, front }: { chief: (typeof cLevels)[number]; colors: string[]; front: boolean }) {
+/**
+ * Sosok seluruh badan (foto PNG transparan atau siluet) digambar di SVG: satu lapis tajam dan satu lapis
+ * blur (feGaussianBlur) yang saling berganti. Blur di dalam SVG ikut tergambar bersama sosoknya,
+ * jadi tepinya menyatu mulus dengan latar tanpa kotak. Tepi bawah dipudarkan dengan mask.
+ */
+function ChiefFigure({ chief, front }: { chief: (typeof cLevels)[number]; front: boolean }) {
   const { t } = useLang();
-  return (
-    <>
-      <div aria-hidden className="absolute inset-0">
-        {colors.map((color, i) => (
-          <span
-            key={i}
-            className={cn('chief-blob absolute size-[70%] rounded-full opacity-80 blur-3xl', ['-left-[15%] -top-[10%]', '-right-[20%] top-[25%]', 'left-[10%] -bottom-[20%]'][i])}
-            style={{ background: color, animationDelay: `${i * -4}s` }}
-          />
-        ))}
-        {/* Bayangan lantai tipis agar sosok tidak terlihat melayang. */}
-        <span className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-forest/25 to-transparent" />
-      </div>
+  const uid = useId().replace(/:/g, '');
+  const body = chief.photo ? (
+    <image href={chief.photo} width="100" height="200" preserveAspectRatio="xMidYMax meet" />
+  ) : (
+    <SilhouetteShape />
+  );
+  const fade = 'transition-opacity duration-500 ease-out';
 
-      <motion.div
-        initial={false}
-        animate={front ? { y: 0, scale: 1 } : { y: 18, scale: 0.97 }}
-        transition={{ ...spring, delay: front ? 0.08 : 0 }}
-        className="absolute inset-0"
-      >
-        {chief.photo ? (
-          <Image
-            src={chief.photo}
-            alt={`${t('Foto', 'Photo of')} ${chief.name}, ${chief.title}`}
-            fill
-            sizes="(min-width: 1024px) 360px, 320px"
-            className="object-contain object-bottom drop-shadow-[0_20px_30px_rgba(11,59,46,0.35)]"
-          />
-        ) : (
-          <Silhouette />
-        )}
-      </motion.div>
-    </>
+  return (
+    <svg
+      viewBox="0 0 100 200"
+      preserveAspectRatio="xMidYMax meet"
+      className="absolute inset-0 size-full select-none overflow-visible"
+      role={chief.photo ? 'img' : undefined}
+      aria-label={chief.photo ? `${t('Foto', 'Photo of')} ${chief.name}, ${chief.title}` : undefined}
+      aria-hidden={chief.photo ? undefined : true}
+    >
+      <defs>
+        <filter id={`${uid}-blur`} x="-25%" y="-15%" width="150%" height="130%">
+          <feGaussianBlur stdDeviation="2.4" />
+          <feColorMatrix type="saturate" values="0.6" />
+        </filter>
+        <linearGradient id={`${uid}-grad`} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="200">
+          <stop offset="0.86" stopColor="#fff" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+        <mask id={`${uid}-fade`} maskUnits="userSpaceOnUse" x="-40" y="-40" width="180" height="280">
+          <rect x="-40" y="-40" width="180" height="280" fill={`url(#${uid}-grad)`} />
+        </mask>
+      </defs>
+      <g mask={`url(#${uid}-fade)`}>
+        <g filter={`url(#${uid}-blur)`} className={fade} style={{ opacity: front ? 0 : 1 }}>
+          {body}
+        </g>
+        <g className={fade} style={{ opacity: front ? 1 : 0 }}>
+          {body}
+        </g>
+      </g>
+    </svg>
   );
 }
 
-// Siluet berjas sebagai pengganti sampai foto asli (PNG tanpa latar) tersedia.
-function Silhouette() {
+// Siluet berdiri sebagai pengganti sampai foto asli (PNG tanpa latar) tersedia.
+function SilhouetteShape() {
   return (
-    <svg viewBox="0 0 200 250" className="absolute inset-x-0 bottom-0 mx-auto h-[88%] w-auto" aria-hidden>
-      <circle cx="100" cy="78" r="38" fill="#0b3b2e" fillOpacity="0.55" />
-      <path d="M22 250c0-58 32-100 78-100s78 42 78 100z" fill="#0b3b2e" fillOpacity="0.7" />
-      <path d="M100 152l-20 0 20 60 20-60z" fill="#ffffff" fillOpacity="0.85" />
-      <path d="M100 160l-6 10 6 40 6-40z" fill="#f2c94c" />
-    </svg>
+    <>
+      <circle cx="50" cy="30" r="17" fill="#0b3b2e" fillOpacity="0.45" />
+      <path d="M12 200V90c0-24 17-40 38-40s38 16 38 40v110z" fill="#0b3b2e" fillOpacity="0.55" />
+      <path d="M50 52l-10 0 10 34 10-34z" fill="#ffffff" fillOpacity="0.85" />
+      <path d="M50 56l-3 6 3 22 3-22z" fill="#f2c94c" />
+    </>
   );
 }
 

@@ -62,7 +62,7 @@ function buildRoles(bod: RecruitmentStatus, associate: RecruitmentStatus, member
       subtitle: 'Strategic Executive Leadership',
       desc: 'The highest leadership body, responsible for strategic direction, key decision making, and oversight of all operations so the organization stays aligned with the impact, vision, and mission it aims to achieve.',
       facts: [
-        { icon: Users, text: '5 positions (CMO, CHRO, CFO, COO, CIDO)' },
+        { icon: Users, text: '5 positions (CMO, CHRO, CFO, COO, CID)' },
         { icon: Clock, text: 'At least 15–20 hours per week' },
         { icon: FileText, text: 'CV, leadership portfolio, and 2 essays' },
       ],

@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { GraduationCap } from 'lucide-react';
 import { founder } from '@/lib/content';
 import { useLang } from '@/lib/i18n';
 
@@ -18,7 +19,15 @@ export function FounderCard() {
         <span aria-hidden className={`${hLine} -top-px -inset-x-16 hidden sm:block`} />
         <span aria-hidden className={`${hLine} -bottom-px -inset-x-16 hidden sm:block`} />
 
-        <div className="relative size-44 shrink-0 self-center sm:size-48 sm:self-auto">
+        {/* Foto seluruh badan berdiri tepat di garis bawah kartu, jadi potongan kakinya terlihat disengaja.
+            Di HP garisnya tidak ada, jadi tepi bawah foto dipudarkan. */}
+        <div
+          className={
+            founder.photo
+              ? 'relative h-[280px] w-[160px] shrink-0 self-center sm:h-[340px] sm:w-[192px] sm:self-end'
+              : 'relative size-40 shrink-0 self-center sm:size-44 sm:self-auto'
+          }
+        >
           <span aria-hidden className={`${vLine} left-0 hidden sm:block`} />
           <span aria-hidden className={`${vLine} right-0 hidden sm:block`} />
           {founder.photo ? (
@@ -26,8 +35,8 @@ export function FounderCard() {
               src={founder.photo}
               alt={`${t('Foto', 'Photo of')} ${founder.name}, ${founder.role}`}
               fill
-              sizes="192px"
-              className="object-cover [mask-image:radial-gradient(circle,black_60%,transparent_100%)]"
+              sizes="(min-width: 640px) 192px, 160px"
+              className="object-contain object-bottom [mask-image:linear-gradient(to_bottom,black_85%,transparent)] sm:[mask-image:none]"
             />
           ) : (
             <div className="flex size-full items-center justify-center bg-[radial-gradient(circle,var(--color-mint-deep)_55%,transparent_100%)]">
@@ -37,14 +46,20 @@ export function FounderCard() {
         </div>
 
         <div className="flex flex-col gap-5 text-center sm:py-6 sm:pr-4 sm:text-left">
-          <blockquote className="text-xl leading-snug text-muted sm:text-[26px]">
+          <blockquote className="text-lg leading-snug text-muted sm:text-[22px]">
             &ldquo;{before}
             {after !== undefined ? <strong className="font-extrabold text-forest">{founder.highlight}</strong> : null}
             {after}&rdquo;
           </blockquote>
-          <figcaption className="flex flex-col gap-1">
+          <figcaption className="flex flex-col items-center gap-1 sm:items-start">
             <span className="text-base font-extrabold text-forest">{founder.name}</span>
             <span className="text-sm text-muted">{founder.role}</span>
+            {founder.campus ? (
+              <span className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full border border-line bg-white/70 px-3 py-1 text-sm font-semibold text-forest backdrop-blur">
+                <GraduationCap className="size-4 text-gold-ink" strokeWidth={2} aria-hidden />
+                {founder.campus}
+              </span>
+            ) : null}
           </figcaption>
         </div>
       </div>

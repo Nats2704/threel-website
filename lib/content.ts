@@ -587,6 +587,7 @@ export const cLevels: Array<{
   value: string;
   scope: Bi;
   name: string;
+  campus?: string;
   photo?: string;
   quote: Bi;
 }> = [
@@ -614,7 +615,9 @@ export const cLevels: Array<{
       id: 'Memimpin rekrutmen, pengembangan anggota, dan budaya organisasi.',
       en: 'Leads recruitment, member development, and organizational culture.',
     },
-    name: '[Nama CHRO]',
+    name: 'Hanif',
+    campus: 'Institut Teknologi Bandung',
+    photo: '/images/tim/chro-hanif.webp',
     quote: {
       id: 'Organisasi ini hanya sekuat orang-orangnya. Tugas kami memastikan setiap anggota tumbuh selama di sini.',
       en: 'This organization is only as strong as its people. Our job is to make sure every member grows while they are here.',
@@ -629,7 +632,9 @@ export const cLevels: Array<{
       id: 'Memimpin penganggaran, pelaporan keuangan, dan keberlanjutan dana, termasuk kelas berbayar ThreeL Mengajar.',
       en: 'Leads budgeting, financial reporting, and funding sustainability, including the paid ThreeL Mengajar classes.',
     },
-    name: '[Nama CFO]',
+    name: 'Athar',
+    campus: 'Institut Teknologi Bandung',
+    photo: '/images/tim/cfo-athar.webp',
     quote: {
       id: 'Setiap rupiah yang dipercayakan kepada kami harus bisa dipertanggungjawabkan dan berdampak.',
       en: 'Every rupiah entrusted to us must be accounted for and make an impact.',
@@ -651,15 +656,17 @@ export const cLevels: Array<{
     },
   },
   {
-    code: 'CIDO',
-    title: 'Chief Innovation and Development Officer',
+    code: 'CID',
+    title: 'Chief Innovation and Development',
     initial: 'I',
-    value: 'cido',
+    value: 'cid',
     scope: {
       id: 'Memimpin inovasi program dan pengembangan inisiatif baru.',
       en: 'Leads program innovation and the development of new initiatives.',
     },
-    name: '[Nama CIDO]',
+    name: 'Jordan',
+    campus: 'Institut Teknologi Bandung',
+    photo: '/images/tim/cid-jordan.webp',
     quote: {
       id: 'Kami terus mencari cara baru agar belajar terasa dekat dan relevan bagi setiap anak.',
       en: 'We keep looking for new ways to make learning feel close and relevant to every child.',
@@ -668,12 +675,14 @@ export const cLevels: Array<{
 ];
 
 /** Founder, ditampilkan terpisah di bawah jajaran C-Level. Data masih DRAF. */
-export const founder: { name: string; role: string; photo?: string; quote: Bi; highlight: string } = {
-  name: '[Nama Founder]',
+export const founder: { name: string; role: string; campus?: string; photo?: string; quote: Bi; highlight: string } = {
+  name: 'Natanael',
   role: 'Founder, ThreeL',
+  campus: 'Institut Teknologi Bandung',
+  photo: '/images/tim/founder-natanael.webp',
   quote: {
-    id: 'ThreeL lahir dari keresahan, dan tumbuh karena anak muda yang memilih untuk bergerak.',
-    en: 'ThreeL was born from restlessness, and it grew because young people chose to act.',
+    id: 'ThreeL lahir dari keresahan nyata di lingkungan masyarakat dan tumbuh karena anak muda yang memilih untuk bergerak dengan potensi mereka masing-masing.',
+    en: 'ThreeL was born from real concerns in our communities and grew because young people chose to act, each with their own potential.',
   },
   highlight: 'ThreeL',
 };

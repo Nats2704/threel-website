@@ -179,23 +179,6 @@ body {
   }
 }
 
-/* Gumpalan warna blur di belakang foto pimpinan, bergeser pelan seperti cahaya. */
-@keyframes chief-blob {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(12%, -8%) scale(1.12);
-  }
-  66% {
-    transform: translate(-10%, 10%) scale(0.92);
-  }
-}
-.chief-blob {
-  animation: chief-blob 14s ease-in-out infinite;
-}
-
 /* Diagram misi: titik orbit berputar pelan, cahaya di belakang logo bernapas. */
 @keyframes orbit-spin {
   to {
@@ -286,7 +269,6 @@ body {
   .dash-march,
   .value-track,
   .partner-track,
-  .chief-blob,
   .orbit-spin,
   .orbit-spin-layer,
   .orbit-counter,
