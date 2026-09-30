@@ -3,6 +3,7 @@ import { Mail } from 'lucide-react';
 import { contact } from '@/lib/content';
 import { Container } from '@/components/ui/section';
 import { InstagramIcon } from '@/components/ui/icons';
+import { DownloadButton } from '@/components/ui/download-button';
 import { FaqList } from '@/components/site/faq-list';
 import { T } from '@/lib/i18n';
 
@@ -23,6 +24,14 @@ export default function FaqPage() {
               en="Short answers about ThreeL, how to join, the selection process, and partnerships."
             />
           </p>
+          <div className="mt-4">
+            <DownloadButton
+              href="/files/threel-about-us.pdf"
+              fileName="About Us - ThreeL Community.pdf"
+              label={<T id="Unduh Profil ThreeL" en="Download ThreeL Profile" />}
+              meta="PDF · 6 MB"
+            />
+          </div>
         </Container>
       </section>
 

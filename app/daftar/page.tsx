@@ -3,6 +3,7 @@ import { recruitment } from '@/lib/recruitment';
 import { Container, Eyebrow } from '@/components/ui/section';
 import { RoleDeck } from '@/components/site/role-deck';
 import { CrowdCanvas } from '@/components/ui/crowd-canvas';
+import { DownloadButton } from '@/components/ui/download-button';
 import { T } from '@/lib/i18n';
 
 export const metadata: Metadata = { title: 'Daftar' };
@@ -35,6 +36,14 @@ export default function DaftarPage() {
       <section className="overflow-x-clip pb-16">
         <Container>
           <RoleDeck bod={bod} associate={assoc} member={member} />
+          <div className="mt-10 flex justify-center">
+            <DownloadButton
+              href="/files/threel-booklet-rekrutmen.pdf"
+              fileName="Booklet Recruitment ShapingChangemakers.pdf"
+              label={<T id="Unduh Booklet Rekrutmen" en="Download Recruitment Booklet" />}
+              meta="PDF · 4 MB"
+            />
+          </div>
         </Container>
       </section>
 
