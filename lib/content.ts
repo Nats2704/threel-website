@@ -649,7 +649,9 @@ export const cLevels: Array<{
       id: 'Memimpin eksekusi program dan operasional lapangan di tiga pilar.',
       en: 'Leads program execution and field operations across the three pillars.',
     },
-    name: '[Nama COO]',
+    name: 'Rakha',
+    campus: 'Institut Teknologi Bandung',
+    photo: '/images/tim/coo-rakha.webp',
     quote: {
       id: 'Rencana yang baik baru berarti ketika dijalankan dengan rapi di lapangan, bersama relawan dan mitra.',
       en: 'A good plan only matters once it is carried out well in the field, together with volunteers and partners.',
