@@ -619,8 +619,8 @@ export const cLevels: Array<{
     campus: 'Institut Teknologi Bandung',
     photo: '/images/tim/chro-hanif.webp',
     quote: {
-      id: 'Organisasi ini hanya sekuat orang-orangnya. Tugas kami memastikan setiap anggota tumbuh selama di sini.',
-      en: 'This organization is only as strong as its people. Our job is to make sure every member grows while they are here.',
+      id: 'Aku percaya menentukan arah yang jelas lebih penting daripada bergerak cepat tanpa tujuan, tapi setelah arah ditentukan, jangan biarkan terlalu banyak berpikir menjadi alasan untuk tidak segera melangkah.',
+      en: "I believe setting a clear direction matters more than moving fast without one, but once that direction is set, don't let overthinking become an excuse not to act.",
     },
   },
   {
@@ -653,8 +653,8 @@ export const cLevels: Array<{
     campus: 'Institut Teknologi Bandung',
     photo: '/images/tim/coo-rakha.webp',
     quote: {
-      id: 'Rencana yang baik baru berarti ketika dijalankan dengan rapi di lapangan, bersama relawan dan mitra.',
-      en: 'A good plan only matters once it is carried out well in the field, together with volunteers and partners.',
+      id: 'Buatku, bertumbuh bukan tentang menjadi yang paling hebat, tapi tentang terus belajar, mencoba, dan tumbuh bersama orang-orang di sekitar.',
+      en: "To me, growing isn't about being the best, but about continuously learning, trying, and growing together with the people around me.",
     },
   },
   {
@@ -670,8 +670,8 @@ export const cLevels: Array<{
     campus: 'Institut Teknologi Bandung',
     photo: '/images/tim/cid-jordan.webp',
     quote: {
-      id: 'Kami terus mencari cara baru agar belajar terasa dekat dan relevan bagi setiap anak.',
-      en: 'We keep looking for new ways to make learning feel close and relevant to every child.',
+      id: 'Inovasi sejati memberdayakan potensi manusia. Ketika kita menggerakkan komunitas berbasis anak muda untuk mengubah perilaku terhadap lingkungan, di situlah kita menyalakan dampak yang mendefinisikan ulang pembangunan masa depan.',
+      en: 'True innovation empowers human capability. When we empower youth-driven communities to shift environmental behavior, we ignite the impact that redefines future development.',
     },
   },
 ];
