@@ -589,6 +589,9 @@ export const cLevels: Array<{
   name: string;
   campus?: string;
   photo?: string;
+  /** Rasio lebar:tinggi foto (lebar/tinggi), supaya tiap foto mengisi tinggi penuh di carousel
+   * meski posenya beda-beda (misal tangan di pinggang lebih lebar dari tangan terlipat). */
+  photoAspect?: number;
   quote: Bi;
 }> = [
   {
@@ -618,6 +621,7 @@ export const cLevels: Array<{
     name: 'Hanif',
     campus: 'Institut Teknologi Bandung',
     photo: '/images/tim/chro-hanif.webp',
+    photoAspect: 0.477,
     quote: {
       id: 'Aku percaya menentukan arah yang jelas lebih penting daripada bergerak cepat tanpa tujuan, tapi setelah arah ditentukan, jangan biarkan terlalu banyak berpikir menjadi alasan untuk tidak segera melangkah.',
       en: "I believe setting a clear direction matters more than moving fast without one, but once that direction is set, don't let overthinking become an excuse not to act.",
@@ -635,6 +639,7 @@ export const cLevels: Array<{
     name: 'Athar',
     campus: 'Institut Teknologi Bandung',
     photo: '/images/tim/cfo-athar.webp',
+    photoAspect: 0.505,
     quote: {
       id: 'Setiap rupiah yang dipercayakan kepada kami harus bisa dipertanggungjawabkan dan berdampak.',
       en: 'Every rupiah entrusted to us must be accounted for and make an impact.',
@@ -652,6 +657,7 @@ export const cLevels: Array<{
     name: 'Rakha',
     campus: 'Institut Teknologi Bandung',
     photo: '/images/tim/coo-rakha.webp',
+    photoAspect: 0.782,
     quote: {
       id: 'Buatku, bertumbuh bukan tentang menjadi yang paling hebat, tapi tentang terus belajar, mencoba, dan tumbuh bersama orang-orang di sekitar.',
       en: "To me, growing isn't about being the best, but about continuously learning, trying, and growing together with the people around me.",
@@ -669,6 +675,7 @@ export const cLevels: Array<{
     name: 'Jordan',
     campus: 'Institut Teknologi Bandung',
     photo: '/images/tim/cid-jordan.webp',
+    photoAspect: 0.523,
     quote: {
       id: 'Inovasi sejati memberdayakan potensi manusia. Ketika kita menggerakkan komunitas berbasis anak muda untuk mengubah perilaku terhadap lingkungan, di situlah kita menyalakan dampak yang mendefinisikan ulang pembangunan masa depan.',
       en: 'True innovation empowers human capability. When we empower youth-driven communities to shift environmental behavior, we ignite the impact that redefines future development.',

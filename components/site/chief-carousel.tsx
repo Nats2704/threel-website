@@ -152,8 +152,13 @@ export function ChiefCarousel() {
 function ChiefFigure({ chief, front }: { chief: (typeof cLevels)[number]; front: boolean }) {
   const { t } = useLang();
   const uid = useId().replace(/:/g, '');
+  // Tinggi selalu 200 (penuh viewBox); lebar menyesuaikan rasio asli foto, dipusatkan.
+  // Dengan begitu pose yang lebih lebar (mis. tangan di pinggang) tidak tampil lebih pendek
+  // daripada pose yang lebih ramping (tangan terlipat) — tingginya sama-sama penuh dari kepala ke bawah.
+  const aspect = chief.photoAspect ?? 0.5;
+  const w = 200 * aspect;
   const body = chief.photo ? (
-    <image href={chief.photo} width="100" height="200" preserveAspectRatio="xMidYMax meet" />
+    <image href={chief.photo} x={50 - w / 2} y="0" width={w} height="200" preserveAspectRatio="xMidYMid meet" />
   ) : (
     <SilhouetteShape />
   );
