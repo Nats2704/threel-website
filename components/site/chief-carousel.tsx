@@ -48,7 +48,7 @@ export function ChiefCarousel() {
           if (e.key === 'ArrowLeft') go(-1);
           if (e.key === 'ArrowRight') go(1);
         }}
-        className="grid items-center gap-6 sm:gap-10 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:gap-24"
+        className="grid items-center gap-6 sm:gap-10 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:gap-24 lg:[&>div:last-child]:pl-20 xl:[&>div:last-child]:pl-28"
       >
         <div className="relative mx-auto h-[380px] w-full max-w-[340px] overflow-x-clip lg:overflow-x-visible sm:h-[500px] lg:h-[560px] lg:max-w-none">
           {/* Bayangan lantai tipis agar sosok depan tidak terlihat melayang. */}

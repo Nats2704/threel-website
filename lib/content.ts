@@ -641,8 +641,8 @@ export const cLevels: Array<{
     photo: '/images/tim/cfo-athar.webp',
     photoAspect: 0.505,
     quote: {
-      id: 'Setiap rupiah yang dipercayakan kepada kami harus bisa dipertanggungjawabkan dan berdampak.',
-      en: 'Every rupiah entrusted to us must be accounted for and make an impact.',
+      id: 'Ide itu ibarat modal. Gak bakal ngasilin cuan perubahan kalau nggak diputer bareng tim yang tepat. Low risk, high impact, dan selalu siap growth bareng.',
+      en: "Ideas are like capital. They won't yield the returns of change unless they're put to work with the right team. Low risk, high impact, and always ready to grow together.",
     },
   },
   {
@@ -686,7 +686,7 @@ export const cLevels: Array<{
 /** Founder, ditampilkan terpisah di bawah jajaran C-Level. Data masih DRAF. */
 export const founder: { name: string; role: string; campus?: string; photo?: string; quote: Bi; highlight: string } = {
   name: 'Natanael',
-  role: 'Founder, ThreeL',
+  role: 'Founder & CEO',
   campus: 'Institut Teknologi Bandung',
   photo: '/images/tim/founder-natanael.webp',
   quote: {
